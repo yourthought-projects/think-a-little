@@ -11,3 +11,19 @@ git push
 A trabajar para aprender mas.
 
 jajaja buen reto
+
+--@ hola hice algunos ajustes 
+
+retos-mentales/
+│
+├── images/
+│   ├── icono-reloj.png
+│   ├── icono-copa.png
+│   └── icono-puerta.png
+│
+├── index.html  (La portada que vamos a modificar)
+│
+└── casos/
+    ├── caso1.html
+    ├── caso2.html
+    └── caso3.html
