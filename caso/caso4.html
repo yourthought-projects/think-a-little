@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso #003: La Habitación Cerrada</title>
+    <style>
+        /* Estilos visuales con tema "Sherlock / Difícil / Rojo" */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #0f0505; /* Rojo muy oscuro, casi negro */
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .caso-card {
+            background-color: #220a0a;
+            border: 1px solid #4d1212;
+            padding: 30px;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.15);
+            position: relative;
+        }
+
+        /* Etiqueta de Dificultad */
+        .badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background-color: #c0392b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            font-family: sans-serif;
+        }
+
+        h1 { 
+            color: #e74c3c; /* Rojo brillante */
+            text-align: center; 
+            border-bottom: 2px solid #4d1212; 
+            padding-bottom: 10px; 
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        h3 { color: #c0392b; margin-top: 25px; }
+        
+        .pista-box {
+            background-color: #1a0505;
+            padding: 15px;
+            border-left: 4px solid #e74c3c;
+            margin: 20px 0;
+            font-style: italic;
+            line-height: 1.5;
+            color: #bdc3c7;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 12px;
+            font-size: 16px;
+            background: #361010;
+            border: 1px solid #e74c3c;
+            color: white;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #e74c3c;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        button:hover { background-color: #c0392b; }
+
+        #resultado {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .win { background-color: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; }
+        .fail { background-color: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+
+        .volver-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #777;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .volver-link:hover { color: #e74c3c; }
+
+    </style>
+</head>
+<body>
+
+    <div class="caso-card">
+        <div class="badge">NIVEL: MAESTRO</div>
+        <h1>Caso #004: La pelea sin ganador</h1>
+        <p><strong>El Escenario:</strong> Una habitación comun.</p>
+        <p><strong>El Suceso:</strong> Un hombre se pelea con una replica casi exacta de el.</p>
+        
+        <p>Un hombre robusto esta cara a cara con una persona casi identica a si mismo.</p>
+
+        <div class="pista-box">
+            <ul>
+                <li>El hombre enojado le grita a la otra persona.</li>
+                <li>La persona frente a el simplemente arremeda sus movimientos</li>
+                <li>Las dos personas enojadas se empiesan a pelear</li>
+                <li>Despues de golpearse y romper varias cosas la persona frente al hombre desaparece.</li>
+                <li>Cada paso del hombre que permanese en pie, hace sonidos "crak... crak crak".</li>
+            </ul>
+        </div>
+
+        <h3>¿Con quien estaba peleando el hombre?</h3>
+        <p>Es acaso un suseso sobrenatural</p>
+        
+        <div style="text-align: center;">
+            <input type="text" id="respuestaUsuario" placeholder="un fantasma, una ilución??">
+            <button onclick="verificarRespuesta()">DEDUCIR</button>
+        </div>
+
+        <div id="resultado"></div>
+
+        <a href="../index.html" class="volver-link">← Volver al Archivo de Casos</a>
+    </div>
+
+    <script>
+        function verificarRespuesta() {
+            let respuesta = document.getElementById("respuestaUsuario").value;
+            respuesta = respuesta.toLowerCase().trim();
+            let mensaje = document.getElementById("resultado");
+
+            // Lógica de validación
+            // Aceptamos variaciones como "bloque de hielo", "un hielo gigante", etc.
+            if (respuesta.includes("espejo")) {
+                mensaje.innerHTML = "¡¡aureka!! <br>El espejo refleja su <strong>cuerpo</strong>.<br>Cuando pelean el espejo termina roto, por eso desaparece el hombre misterioso.";
+                mensaje.className = "win";
+            } else if (respuesta === "") {
+                mensaje.innerHTML = "Claro piensas que es un fantasma, por eso el vacio.<br>incorrecto";
+                mensaje.className = "";
+            } else if (respuesta.includes("fantasma") || respuesta.includes("brinc")) {
+                mensaje.innerHTML = "Imposible. No existen.";
+                mensaje.className = "fail";
+            } else if (respuesta.includes("reflejo") || respuesta.includes("brinc")) {
+                mensaje.innerHTML = "¡¡Muy serca!!, pero con que se peleo?.";
+                mensaje.className = "fail";
+            } else if (respuesta.includes("no se") || respuesta.includes("charco")) {
+                mensaje.innerHTML = "jajaja Piensale";
+                mensaje.className = "fail";
+            } else {
+                mensaje.innerHTML = "INCORRECTO. Talves sea mas comun de lo que crees??.";
+                mensaje.className = "fail";
+            }
+        }
+    </script>
+
+</body>
+</html>
