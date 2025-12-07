@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo Omega: Audio Edition</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        #game-container {
+            border: 2px solid #0f0;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.1);
+            background: #000;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Scanline effect para look retro */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        h1 { text-align: center; text-transform: uppercase; margin-top: 0; text-shadow: 0 0 5px #0f0; letter-spacing: 2px; }
+
+        .status-bar { margin-bottom: 15px; }
+        .label { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.9em; margin-bottom: 4px; }
+        
+        .progress-bg {
+            background: #222;
+            height: 24px;
+            width: 100%;
+            border: 1px solid #444;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .goal-marker {
+            position: absolute; left: 90%; top: 0; height: 100%; width: 2px;
+            background: #fff; z-index: 5; opacity: 0.7; box-shadow: 0 0 5px #fff;
+        }
+
+        .progress-fill {
+            height: 100%; width: 50%; background: #0f0;
+            transition: width 0.2s ease-out, background-color 0.3s;
+            position: relative;
+        }
+        
+        /* Efecto de rayas en la barra */
+        .progress-fill::after {
+            content: ""; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+            background-size: 20px 20px;
+            opacity: 0.3;
+        }
+
+        .controls { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 25px; }
+
+        button {
+            background: #001100;
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 15px 5px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.1s;
+            font-size: 0.85rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover { background: #0f0; color: #000; box-shadow: 0 0 15px #0f0; }
+        button:active { transform: scale(0.96); }
+        
+        .btn-vent small { color: #ffeb3b; display: block; margin-top: 5px; font-size: 0.7em; opacity: 0.8; }
+        .btn-reroute small { color: #00bcd4; display: block; margin-top: 5px; font-size: 0.7em; opacity: 0.8; }
+        .btn-seal small { color: #f44336; display: block; margin-top: 5px; font-size: 0.7em; opacity: 0.8; }
+        
+        button:hover small { color: #000; font-weight: bold; }
+
+        #log {
+            height: 120px;
+            border-top: 1px dashed #0f0;
+            margin-top: 20px;
+            padding-top: 10px;
+            overflow-y: hidden;
+            font-size: 0.8em;
+            color: #888;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        #log div { padding: 3px 0; border-bottom: 1px solid #111; }
+        .log-alert { color: #f55 !important; font-weight: bold; text-shadow: 0 0 3px #f00; }
+
+        #timer {
+            text-align: center; font-size: 2.5em; margin-bottom: 10px;
+            color: #f00; font-weight: bold; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .danger { background: #f00 !important; box-shadow: 0 0 15px #f00; }
+        .warning { background: #ff9800 !important; }
+        .stable { background: #0f0 !important; box-shadow: 0 0 10px #0f0; }
+        
+        .hidden { display: none !important; }
+        
+        #overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.96);
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 100;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #overlay-msg { max-width: 500px; text-align: center; line-height: 1.6; color: #ccc; }
+        #start-btn { font-size: 1.2em; padding: 20px 40px; margin-top: 30px; border: 2px solid #0f0; animation: pulse 2s infinite; }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(0, 255, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0); }
+        }
+
+        /* Flash rojo para daño */
+        @keyframes alarmFlash {
+            0% { background-color: #500; }
+            100% { background-color: #000; }
+        }
+        .flash-anim { animation: alarmFlash 0.5s ease-out; }
+
+    </style>
+</head>
+<body>
+
+    <div id="overlay">
+        <h1 id="overlay-title">PROTOCOLO OMEGA</h1>
+        <div id="overlay-msg">
+            <p>SISTEMA: CRÍTICO. TIEMPO RESTANTE: 60s.</p>
+            <p>OBJETIVO: Estabilizar Oxígeno, Energía y Casco > 90%.</p>
+            <p style="color: #f55; border: 1px solid #f00; padding: 10px;">⚠️ ADVERTENCIA: Se activarán protocolos de audio. Ajuste su volumen.</p>
+        </div>
+        <button id="start-btn" onclick="startGame()">INICIAR SECUENCIA</button>
+    </div>
+
+    <div id="game-container">
+        <div id="timer">60.00</div>
+
+        <div class="status-bar">
+            <div class="label"><span>OXÍGENO (O2)</span> <span id="val-o2">50%</span></div>
+            <div class="progress-bg"><div class="goal-marker"></div><div id="bar-o2" class="progress-fill"></div></div>
+        </div>
+
+        <div class="status-bar">
+            <div class="label"><span>ENERGÍA (PWR)</span> <span id="val-pwr">50%</span></div>
+            <div class="progress-bg"><div class="goal-marker"></div><div id="bar-pwr" class="progress-fill"></div></div>
+        </div>
+
+        <div class="status-bar">
+            <div class="label"><span>INTEGRIDAD (HULL)</span> <span id="val-hull">50%</span></div>
+            <div class="progress-bg"><div class="goal-marker"></div><div id="bar-hull" class="progress-fill"></div></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-vent" onclick="action('vent')">VENTILAR<br><small>+O2 / -PWR -HULL</small></button>
+            <button class="btn-reroute" onclick="action('reroute')">REINICIAR<br><small>+PWR / -HULL -O2</small></button>
+            <button class="btn-seal" onclick="action('seal')">SELLAR<br><small>+HULL / -O2 -PWR</small></button>
+        </div>
+
+        <div id="log"></div>
+    </div>
+
+    <script>
+        // --- SISTEMA DE AUDIO SINTETIZADO (Web Audio API) ---
+        const SoundSys = {
+            ctx: null,
+            droneOsc: null,
+            droneGain: null,
+            
+            init: function() {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                this.ctx = new AudioContext();
+            },
+
+            startAmbience: function() {
+                if (!this.ctx) this.init();
+                // Oscilador de fondo (Motor de nave)
+                this.droneOsc = this.ctx.createOscillator();
+                this.droneGain = this.ctx.createGain();
+                
+                this.droneOsc.type = 'sawtooth'; 
+                this.droneOsc.frequency.value = 50; // Hz bajos (hum grave)
+                
+                // Filtro para hacerlo más suave
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 120;
+
+                this.droneOsc.connect(filter);
+                filter.connect(this.droneGain);
+                this.droneGain.connect(this.ctx.destination);
+                
+                this.droneGain.gain.setValueAtTime(0.15, this.ctx.currentTime); // Volumen bajo
+                this.droneOsc.start();
+            },
+
+            stopAmbience: function() {
+                if (this.droneOsc) {
+                    this.droneOsc.stop();
+                    this.droneOsc = null;
+                }
+            },
+
+            playClick: function(type) {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                // Diferentes tonos según botón
+                if (type === 'vent') osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+                if (type === 'reroute') osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+                if (type === 'seal') osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+                
+                osc.type = 'square';
+                
+                // Sonido corto "bip"
+                gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+                
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.1);
+            },
+
+            playAlarm: function() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(800, this.ctx.currentTime + 0.3); // Sirena subida
+                
+                gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.8);
+
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.8);
+            },
+
+            playWin: function() {
+                this.stopAmbience();
+                // Acorde simple de victoria
+                this.playTone(440, 0.5); // A
+                setTimeout(() => this.playTone(554, 0.5), 200); // C#
+                setTimeout(() => this.playTone(659, 1.0), 400); // E
+            },
+
+            playLoss: function() {
+                this.stopAmbience();
+                // Sonido de apagado
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(10, this.ctx.currentTime + 1);
+                gain.gain.setValueAtTime(0.5, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 1);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 1.2);
+            },
+            
+            playTone: function(freq, dur) {
+                if(!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur);
+                osc.start();
+                osc.stop(this.ctx.currentTime + dur);
+            }
+        };
+
+        // --- LÓGICA DEL JUEGO ---
+        let state = { o2: 50, pwr: 50, hull: 50 };
+        let timer = 60;
+        let interval;
+        let isPlaying = false;
+        let hasEventTriggered = false;
+
+        const DECAY_RATE = 1.0; 
+        const BOOST = 22;      
+        const COST_HIGH = 13;   
+        const COST_LOW = 9;     
+        const WIN_THRESHOLD = 90;
+        const EVENT_DAMAGE = 35;
+
+        const CRITICAL_EVENTS = [
+            { id: 'meteor', msg: "¡IMPACTO EN EL CASCO!", effect: () => { state.hull -= EVENT_DAMAGE; } },
+            { id: 'hatch', msg: "¡FALLO EN ESCOTILLA DE O2!", effect: () => { state.o2 -= EVENT_DAMAGE; } },
+            { id: 'generator', msg: "¡SOBRECARGA DE NÚCLEO!", effect: () => { state.pwr -= EVENT_DAMAGE; } }
+        ];
+
+        function startGame() {
+            // Inicializar audio al primer clic del usuario
+            SoundSys.init();
+            SoundSys.startAmbience();
+
+            document.getElementById('overlay').classList.add('hidden');
+            document.getElementById('log').innerHTML = '';
+            
+            state = { 
+                o2: Math.floor(Math.random() * 30) + 40, 
+                pwr: Math.floor(Math.random() * 30) + 40, 
+                hull: Math.floor(Math.random() * 30) + 40 
+            };
+            timer = 60;
+            hasEventTriggered = false;
+            isPlaying = true;
+            
+            log("SISTEMA INICIADO. MOTOR EN LÍNEA.");
+            updateUI();
+            
+            interval = setInterval(gameLoop, 100);
+        }
+
+        function gameLoop() {
+            if (!isPlaying) return;
+
+            timer -= 0.1;
+            state.o2 -= DECAY_RATE / 10;
+            state.pwr -= DECAY_RATE / 10;
+            state.hull -= DECAY_RATE / 10;
+
+            if (!hasEventTriggered && timer < 45 && timer > 15) {
+                if (Math.random() < 0.015) {
+                    triggerCriticalEvent();
+                }
+            }
+
+            checkGameState();
+            updateUI();
+        }
+
+        function triggerCriticalEvent() {
+            hasEventTriggered = true;
+            const eventIdx = Math.floor(Math.random() * CRITICAL_EVENTS.length);
+            const ev = CRITICAL_EVENTS[eventIdx];
+            
+            ev.effect();
+            clampState();
+            
+            SoundSys.playAlarm(); // SONIDO DE ALARMA
+            log(">>> ALERTA CRÍTICA: " + ev.msg + " <<<", true);
+            
+            // Efecto visual flash
+            const container = document.getElementById('game-container');
+            container.classList.remove('flash-anim'); // reset
+            void container.offsetWidth; // trigger reflow
+            container.classList.add('flash-anim');
+        }
+
+        function action(type) {
+            if (!isPlaying) return;
+            
+            SoundSys.playClick(type); // SONIDO DE INTERFAZ
+
+            if (type === 'vent') {
+                state.o2 += BOOST; state.pwr -= COST_HIGH; state.hull -= COST_LOW;
+                log("Ventilación: +O2 estabilizado.");
+            } else if (type === 'reroute') {
+                state.pwr += BOOST; state.hull -= COST_HIGH; state.o2 -= COST_LOW;
+                log("Núcleo: +Energía redirigida.");
+            } else if (type === 'seal') {
+                state.hull += BOOST; state.o2 -= COST_HIGH; state.pwr -= COST_LOW;
+                log("Reparación: +Integridad estructural.");
+            }
+            
+            clampState();
+            checkGameState();
+            updateUI();
+        }
+
+        function clampState() {
+            state.o2 = Math.min(100, state.o2);
+            state.pwr = Math.min(100, state.pwr);
+            state.hull = Math.min(100, state.hull);
+        }
+
+        function checkGameState() {
+            if (state.o2 <= 0 || state.pwr <= 0 || state.hull <= 0 || timer <= 0) {
+                gameOver(false);
+            }
+            else if (state.o2 >= WIN_THRESHOLD && state.pwr >= WIN_THRESHOLD && state.hull >= WIN_THRESHOLD) {
+                gameOver(true);
+            }
+        }
+
+        function gameOver(win) {
+            isPlaying = false;
+            clearInterval(interval);
+            const overlay = document.getElementById('overlay');
+            const title = document.getElementById('overlay-title');
+            const msg = document.getElementById('overlay-msg');
+            const btn = document.getElementById('start-btn');
+            
+            if (win) {
+                SoundSys.playWin(); // SONIDO VICTORIA
+                title.innerText = "SISTEMAS AL 100%";
+                title.style.color = "#0f0";
+                msg.innerHTML = "<h2 style='color:#0f0'>NAVE SALVADA</h2><p>Excelente trabajo, Comandante.</p>";
+            } else {
+                SoundSys.playLoss(); // SONIDO DERROTA
+                title.innerText = "SEÑAL PERDIDA";
+                title.style.color = "#f00";
+                let reason = timer <= 0 ? "Sin tiempo." : "Fallo sistémico.";
+                msg.innerHTML = `<h2 style='color:#f00'>MISIÓN FALLIDA</h2><p>${reason}</p>`;
+            }
+            
+            btn.innerText = "REINTENTAR SIMULACIÓN";
+            overlay.classList.remove('hidden');
+        }
+
+        function updateUI() {
+            const timerEl = document.getElementById('timer');
+            timerEl.innerText = Math.max(0, timer).toFixed(2);
+            
+            updateBar('o2', state.o2);
+            updateBar('pwr', state.pwr);
+            updateBar('hull', state.hull);
+        }
+
+        function updateBar(id, val) {
+            const el = document.getElementById('bar-' + id);
+            const txt = document.getElementById('val-' + id);
+            let displayVal = Math.max(0, Math.min(100, val));
+            
+            el.style.width = displayVal + '%';
+            txt.innerText = Math.floor(displayVal) + '%';
+
+            el.className = 'progress-fill';
+            if (displayVal <= 0) el.classList.add('danger');
+            else if (displayVal < 35) el.classList.add('danger');
+            else if (displayVal < 65) el.classList.add('warning');
+            else if (displayVal >= WIN_THRESHOLD) el.classList.add('stable');
+        }
+
+        function log(text, isAlert = false) {
+            const logEl = document.getElementById('log');
+            const div = document.createElement('div');
+            div.innerText = `> ${text}`;
+            if (isAlert) div.className = 'log-alert';
+            logEl.appendChild(div);
+            logEl.scrollTop = logEl.scrollHeight; // Auto scroll hacia abajo en esta versión
+        }
+    </script>
+</body>
+</html>
