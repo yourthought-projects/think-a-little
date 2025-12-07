@@ -1,4 +1,12 @@
 hola mundo como este encuentras en es te mundo
 
+Comandos
 
-cambio
+git pull
+git status
+git add .
+git commit -m
+git push
+
+A trabajar para aprender mas.
+
