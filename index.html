@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agencia de Detectives: Casos Sin Resolver</title>
+    <style>
+        /* --- Estética General (Moderno y Misterioso) --- */
+        :root {
+            --fondo-principal: #0a0a12; /* Negro azulado muy oscuro */
+            --fondo-tarjeta: #161625;   /* Un poco más claro para contraste */
+            --texto-principal: #e0e0e0;
+            --acento-neon: #7c4dff;     /* Un morado neón vibrante */
+            --acento-secundario: #00e5ff; /* Cian para detalles */
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Fuente limpia y moderna */
+            background-color: var(--fondo-principal);
+            color: var(--texto-principal);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* --- Encabezado --- */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-top: 30px;
+        }
+
+        h1 {
+            font-family: 'Courier New', Courier, monospace; /* Toque clásico de detective */
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--texto-principal);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            /* Efecto de brillo sutil */
+            text-shadow: 0 0 10px rgba(124, 77, 255, 0.5);
+        }
+
+        .intro-text {
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            color: #a0a0b0;
+        }
+
+        /* --- Cuadrícula de Casos (Grid System) --- */
+        .casos-grid {
+            display: grid;
+            /* Esto hace que sea responsivo automáticamente: */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto 50px auto;
+            padding: 20px;
+        }
+
+        /* --- Tarjetas de Caso Individual --- */
+        .caso-card {
+            background-color: var(--fondo-tarjeta);
+            border: 1px solid #2a2a3a;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: left;
+            transition: all 0.3s ease; /* Suaviza la animación al pasar el mouse */
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        /* Efecto Hover: Cuando pasas el mouse por encima */
+        .caso-card:hover {
+            transform: translateY(-7px); /* Se levanta un poco */
+            border-color: var(--acento-neon); /* El borde brilla */
+            box-shadow: 0 10px 20px rgba(124, 77, 255, 0.2); /* Sombra de neón */
+        }
+
+        /* Un pequeño adorno visual en la esquina de la tarjeta */
+        .caso-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--acento-neon);
+            opacity: 0.5;
+        }
+
+        .caso-icono {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--acento-secundario);
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin: 10px 0;
+            color: white;
+        }
+
+        .descripcion-caso {
+            color: #b0b0c0;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        /* --- El Botón --- */
+        .btn-resolver {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: transparent;
+            border: 2px solid var(--acento-neon);
+            color: var(--acento-neon);
+            text-decoration: none; /* Quita el subrayado del enlace */
+            font-weight: bold;
+            border-radius: 30px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .caso-card:hover .btn-resolver {
+            background-color: var(--acento-neon);
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Archivo de Casos</h1>
+        <p class="intro-text">Bienvenido al depósito de expedientes sin resolver. Elige un caso y demuestra que tu mente es superior a la del criminal.</p>
+    </header>
+
+    <main class="casos-grid">
+
+        <div class="caso-card">
+            <div class="caso-icono">🕵️‍♂️</div> <h2>Caso #001: El Reloj Detenido</h2>
+            <p class="descripcion-caso">
+                Un millonario robado en el segundo exacto de un apagón. Tres sospechosos con coartadas sólidas. Encuentra la falla lógica que delata al culpable.
+            </p>
+            <a href="caso1.html" class="btn-resolver">ABRIR EXPEDIENTE</a>
+        </div>
+
+        <div class="caso-card" style="opacity: 0.6;"> <div class="caso-icono">🍷</div>
+            <h2>Caso #002: Veneno en la Gala</h2>
+            <p class="descripcion-caso">
+                (Próximamente) Un invitado cae fulminado en una cena benéfica. Nadie se acercó a su copa. ¿Un crimen a distancia?
+            </p>
+            <span class="btn-resolver" style="border-color: gray; color: gray; cursor: not-allowed;">EN PROCESO...</span>
+        </div>
+
+        <div class="caso-card" style="opacity: 0.6;">
+            <div class="caso-icono">🚪</div>
+            <h2>Caso #003: La Habitación Cerrada</h2>
+            <p class="descripcion-caso">
+                (Próximamente) Un crimen imposible dentro de una habitación sellada por dentro. No hay entradas ni salidas.
+            </p>
+            <span class="btn-resolver" style="border-color: gray; color: gray; cursor: not-allowed;">EN PROCESO...</span>
+        </div>
+
+    </main>
+
+</body>
+</html>
