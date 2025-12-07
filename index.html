@@ -183,35 +183,69 @@
                 <img src="images/icono-reloj.png" alt="Reloj antiguo" class="card-image-header">
                 
                 <div class="card-content">
-                    <h2>Caso #001: El Reloj Detenido</h2>
+                    <h2>Caso #001: El Reloj Robado</h2>
                     <p class="descripcion-caso">
                         Un millonario, un apagón y tres sospechosos. El tiempo se detuvo a las 2:00 PM, pero alguien cometió un error cronológico fatal.
                     </p>
-                    <a href="caso1.html" class="btn-resolver">Abrir Expediente</a>
+                    <a href="./caso/caso1.html" class="btn-resolver">Abrir Expediente</a>
                 </div>
             </div>
 
-            <div class="caso-card" style="opacity: 0.7;">
+            <div class="caso-card">
                 <img src="images/icono-copa.png" alt="Copa de vino" class="card-image-header" style="filter: grayscale(80%);">
                 
                 <div class="card-content">
                     <h2>Caso #002: Veneno en la Gala</h2>
                     <p class="descripcion-caso">
-                        (Próximamente) Un crimen cometido a la vista de todos, sin que nadie se acercara a la víctima. La física será tu mejor aliada.
+                        Un crimen cometido a la vista de todos, sin que nadie se acercara a la víctima. ¿Un crimen a distancia?.
+                    </p>
+                    <br>
+                    <a href="./caso/caso2.html" class="btn-resolver">Abrir Expediente</a>
+                </div>
+            </div>
+
+            <div class="caso-card" style="border-color: #581d1d;"> <img src="images/icono-puerta.png" alt="Puerta cerrada misteriosa" class="card-image-header">
+    
+            <div class="card-content">
+                <h2 style="color: #ff5252;">Caso #003: La Habitación Cerrada</h2>
+                <p class="descripcion-caso">
+                    Un hombre colgado en una habitación vacía, suspendido a un metro del suelo. Sin sillas ni escaleras. Solo un charco de agua. ¿Cómo subió?
+                </p>
+                <a href="./caso/caso3.html" class="btn-resolver" style="border-color: #ff5252; color: #ff5252;">ABRIR EXPEDIENTE</a>
+            </div>
+            
+            <style>
+                /* Esto es un truco CSS inline: solo afecta a este bloque si lo pones dentro o usas clases específicas */
+                /* Para simplificar, asegúrate de que el hover general en tu CSS principal no choque mucho, 
+                o simplemente deja que se ponga morado (el color por defecto) al pasar el mouse. 
+                Si quieres que sea rojo al pasar el mouse, añade esto a tu CSS principal: */
+                
+                /* .caso-card:nth-child(3):hover { border-color: #ff5252; } */
+                /* .caso-card:nth-child(3):hover .btn-resolver { background-color: #ff5252; color: white; } */
+            </style>
+            </div>
+
+            <div class="caso-card" style="opacity: 0.7;">
+                <img src="images/icono-camion.png" alt="Puerta cerrada" class="card-image-header" style="filter: grayscale(80%);">
+                
+                <div class="card-content">
+                    <h2>Caso #004: El Camionero en Sentido Contrario</h2>
+                    <p class="descripcion-caso">
+                        (Próximamente) Infringe la ley, descaradamente frenta las autoridades y aun asi lo saludan amablemente.
                     </p>
                     <span class="btn-resolver" style="border-color: gray; color: gray; cursor: not-allowed;">Bloqueado</span>
                 </div>
             </div>
-
-            <div class="caso-card" style="opacity: 0.7;">
-                <img src="images/icono-puerta.png" alt="Puerta cerrada" class="card-image-header" style="filter: grayscale(80%);">
+            
+            <div class="caso-card">
+                 <img src="images/icono-invita.png" alt="Reloj antiguo" class="card-image-header">
                 
                 <div class="card-content">
-                    <h2>Caso #003: Cuarto Cerrado</h2>
+                    <h2>Caso #005: Publica Tu Caso</h2>
                     <p class="descripcion-caso">
-                        (Próximamente) El clásico problema de la habitación cerrada por dentro. Solo para mentes maestras nivel Sherlock.
+                        (Próximamente) Nadi logra comprender como llego, las pista son claras pero comfusas, tendras que usar tu imaginacion e ingenio para Compartir ese misterio, que ya tramaste. 
                     </p>
-                    <span class="btn-resolver" style="border-color: gray; color: gray; cursor: not-allowed;">Bloqueado</span>
+                    <span class="btn-resolver" style="border-color: gray; color: gray; cursor: not-allowed;">Atrevete a Compartir</span>
                 </div>
             </div>
 
