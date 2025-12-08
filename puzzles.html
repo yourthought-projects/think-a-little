@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Think a little: Puzzle Para Resolver</title>
+    <style>
+        /* --- Estética General --- */
+        :root {
+            --fondo-principal: #0a0a12;
+            --fondo-tarjeta: #161625;
+            --texto-principal: #e0e0e0;
+            --acento-neon: #7c4dff;
+            --acento-secundario: #00e5ff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--fondo-principal);
+            color: var(--texto-principal);
+            margin: 0;
+            padding: 0; /* Quitamos padding del body para diseño full-width */
+            line-height: 1.6;
+        }
+
+        /* --- Encabezado Principal --- */
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a12 100%);
+        }
+
+        h1 {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--texto-principal);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(124, 77, 255, 0.6);
+        }
+
+        .intro-text {
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            color: #a0a0b0;
+        }
+
+        /* --- Contenedor Principal --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* --- Grid de Casos --- */
+        .casos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        /* --- Tarjetas (Nuevo Diseño) --- */
+        .caso-card {
+            background-color: var(--fondo-tarjeta);
+            border: 1px solid #2a2a3a;
+            border-radius: 16px;
+            /* Importante: overflow hidden para que la imagen respete las esquinas redondeadas */
+            overflow: hidden; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column; /* Para empujar el botón al final si hace falta */
+        }
+
+        .caso-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--acento-neon);
+            box-shadow: 0 15px 30px rgba(124, 77, 255, 0.15);
+        }
+
+        /* Estilo de la imagen encabezado */
+        .card-image-header {
+            width: 100%;
+            height: 200px; /* Altura fija para uniformidad */
+            object-fit: cover; /* Recorta la imagen para llenar el espacio sin deformar */
+            border-bottom: 1px solid #2a2a3a;
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin: 0 0 10px 0;
+            color: white;
+        }
+
+        .descripcion-caso {
+            color: #b0b0c0;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        /* Botón */
+        .btn-resolver {
+            display: inline-block;
+            padding: 10px 25px;
+            border: 1px solid var(--acento-neon);
+            color: var(--acento-neon);
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 6px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        .caso-card:hover .btn-resolver {
+            background-color: var(--acento-neon);
+            color: white;
+            box-shadow: 0 0 15px var(--acento-neon);
+        }
+
+        /* --- Nueva Sección: Envía tu Reto --- */
+        .submission-section {
+            background: linear-gradient(45deg, #12121a, #1a1a25);
+            border: 2px dashed #444;
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            margin-top: 60px;
+            position: relative;
+        }
+
+        .submission-section h3 {
+            color: var(--acento-secundario);
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .submission-section p {
+            color: #ccc;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+        }
+
+        .btn-enviar {
+            background-color: var(--acento-secundario);
+            color: #000;
+            padding: 15px 35px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+
+        .btn-enviar:hover {
+            transform: scale(1.05);
+            background-color: #00b8cc;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Archivo de Puzzle</h1>
+        <p class="intro-text">Bienvenido a Think a Little. Elige un puzzle y demuestra tu ingenio.</p>
+    </header>
+
+    <div class="container">
+        
+        <main class="casos-grid">
+
+            <div class="caso-card">
+                <img src="images/icono-omega.png" alt="Reloj antiguo" class="card-image-header">
+                
+                <div class="card-content">
+                    <h2>Puzzle #001: Protocolo Omega</h2>
+                    <p class="descripcion-caso">
+                        "Simulador de Estabilización de Sistemas", Eres la IA de una nave a la deriva. Tienes 3 sistemas vitales (Oxígeno, Energía, Integridad del Casco). Todos los sistemas están fallando y decaen con el tiempo.
+                    </p>
+                    <a href="./puzzle/puzzle1.html" class="btn-resolver">Abrir Expediente</a>
+                </div>
+            </div>
+            
+            <!-- <div class="caso-card" style="border-color: #581d1d;"> <img src="images/icono-puerta.png" alt="Puerta cerrada misteriosa" class="card-image-header">
+                
+                <div class="card-content">
+                    <h2 style="color: #ff5252;">Caso #002: La Habitación Cerrada</h2>
+                    <p class="descripcion-caso">
+                        Un hombre colgado en una habitación vacía, suspendido a un metro del suelo. Sin sillas ni escaleras. Solo un charco de agua. ¿Cómo subió?
+                    </p>
+                    <a href="./caso/caso2.html" class="btn-resolver" style="border-color: #ff5252; color: #ff5252;">ABRIR EXPEDIENTE</a>
+                </div>
+                
+                <style>
+                    /* Esto es un truco CSS inline: solo afecta a este bloque si lo pones dentro o usas clases específicas */
+                    /* Para simplificar, asegúrate de que el hover general en tu CSS principal no choque mucho, 
+                    o simplemente deja que se ponga morado (el color por defecto) al pasar el mouse. 
+                    Si quieres que sea rojo al pasar el mouse, añade esto a tu CSS principal: */
+                    
+                    /* .caso-card:nth-child(3):hover { border-color: #ff5252; } */
+                    /* .caso-card:nth-child(3):hover .btn-resolver { background-color: #ff5252; color: white; } */
+                    </style>
+            </div>
+            
+            <div class="caso-card">
+                <img src="images/icono-copa.png" alt="Copa de vino" class="card-image-header" style="filter: grayscale(80%);">
+                
+                <div class="card-content">
+                    <h2>Caso #003: Veneno en la Gala</h2>
+                    <p class="descripcion-caso">
+                        Un crimen cometido a la vista de todos, sin que nadie se acercara a la víctima. ¿Un crimen a distancia?.
+                    </p>
+                    <br>
+                    <a href="./caso/caso3.html" class="btn-resolver">Abrir Expediente</a>
+                </div>
+            </div>
+
+            <div class="caso-card" style="opacity: 1;">
+                <img src="images/icono-pelea.png" alt="Puerta cerrada" class="card-image-header">
+                
+                <div class="card-content">
+                    <h2>Caso #004: La pelea sin ganador</h2>
+                    <p class="descripcion-caso">
+                        En una habitacion dos personas completamente identicas se estan viendo cara a cara, de un momento a otro empiesan a golpearse, al finalizar el combate solo queda una persona, la otra desaparecio. ¿Con quien peleaba?
+                    </p>
+                    <a href="./caso/caso4.html" class="btn-resolver" >ABRIR EXPEDIENTE</a>
+                </div>
+            </div> -->
+
+            <div class="caso-card" style="opacity: 0.7;">
+                <img src="images/icono-camion.png" alt="Puerta cerrada" class="card-image-header" style="filter: grayscale(80%);">
+                
+                <div class="card-content">
+                    <h2>Caso #005: El Camionero en Sentido Contrario</h2>
+                    <p class="descripcion-caso">
+                        (Próximamente) Infringe la ley, descaradamente frenta las autoridades y aun asi lo saludan amablemente.
+                    </p>
+                    <span class="btn-resolver" style="border-color: gray; color: gray; cursor: not-allowed;">Bloqueado</span>
+                </div>
+            </div>
+            
+            <div class="caso-card">
+                 <img src="images/icono-invita.png" alt="Reloj antiguo" class="card-image-header">
+                
+                <div class="card-content">
+                    <h2>Caso #006: Publica Tu Caso</h2>
+                    <p class="descripcion-caso">
+                        (Próximamente) Nadi logra comprender como llego, las pista son claras pero comfusas, tendras que usar tu imaginacion e ingenio para Compartir ese misterio, que ya tramaste. 
+                    </p>
+                    <span class="btn-resolver" style="border-color: gray; color: gray; cursor: not-allowed;">Atrevete a Compartir</span>
+                </div>
+            </div>
+
+        </main>
+
+        <section class="submission-section">
+            <h3>¿Tienes una mente retorcida?</h3>
+            <p>
+                Buscamos nuevos desafíos. Si tienes un acertijo original, un misterio lógico o un "puzzle" lateral, envíalo a nuestra redacción. Si es bueno, lo publicaremos con tu nombre.
+            </p>
+            <a href="mailto:tucorreo@gmail.com?subject=Nuevo Reto para la Web&body=Hola, aquí te envío mi propuesta de misterio..." class="btn-enviar">
+                ✉️ ENVIAR MI MISTERIO
+            </a>
+        </section>
+
+    </div>
+
+</body>
+</html>
