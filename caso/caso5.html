@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso #005: La Grabadora</title>
+    <style>
+        /* Estilos visuales con tema "Ámbar / Misterio Clásico" */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #1a150e; /* Negro con tono marrón muy oscuro */
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .caso-card {
+            background-color: #261e14;
+            border: 1px solid #5c3a16;
+            padding: 30px;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(230, 126, 34, 0.15);
+            position: relative;
+        }
+
+        /* Etiqueta de Nivel */
+        .badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background-color: #d35400;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            font-family: sans-serif;
+        }
+
+        h1 { 
+            color: #e67e22; /* Naranja Ámbar */
+            text-align: center; 
+            border-bottom: 2px solid #5c3a16; 
+            padding-bottom: 10px; 
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        h3 { color: #d35400; margin-top: 25px; }
+        
+        .pista-box {
+            background-color: #2e2418;
+            padding: 15px;
+            border-left: 4px solid #e67e22;
+            margin: 20px 0;
+            font-style: italic;
+            line-height: 1.5;
+            color: #d6dbdf;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 12px;
+            font-size: 16px;
+            background: #3d2e1e;
+            border: 1px solid #e67e22;
+            color: white;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #e67e22;
+            border: none;
+            color: #1a150e;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        button:hover { background-color: #d35400; color: white; }
+
+        #resultado {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .win { background-color: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; }
+        .fail { background-color: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+
+        .volver-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #777;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .volver-link:hover { color: #e67e22; }
+
+    </style>
+</head>
+<body>
+
+    <div class="caso-card">
+        <div class="badge">NIVEL: DETECTIVE</div>
+        <h1>EXPEDIENTE #005</h1>
+        <p><strong>Escena:</strong> Una biblioteca cerrada.</p>
+        <p><strong>La Víctima:</strong> Un hombre muerto con un disparo en la cabeza y una pistola en la mano.</p>
+        
+        <p>Parece un suicidio evidente. Sobre la mesa, hay una vieja <strong>grabadora de casete</strong>.</p>
+
+        <div class="pista-box">
+            <ul>
+                <li>El detective entra, se pone guantes y pulsa el botón <strong>PLAY</strong> de la grabadora.</li>
+                <li>Se escucha la voz de la víctima: <em>"Ya no puedo más con esta vida. Lo siento."</em></li>
+                <li>Inmediatamente después, en la grabación, se escucha un disparo: <strong>¡BANG!</strong> y la cinta continua en silencio.</li>
+                <li>El detective dice: "Esto no es un suicidio. Es un asesinato".</li>
+            </ul>
+        </div>
+
+        <h3>¿Cómo supo que fue un asesinato?</h3>
+        <p>Piensa un poco y lo resolverás</p>
+        
+        <div style="text-align: center;">
+            <input type="text" id="respuestaUsuario" placeholder="Tu deducción...">
+            <button onclick="verificarRespuesta()">ACUSAR</button>
+        </div>
+
+        <div id="resultado"></div>
+
+        <a href="../misterios.html" class="volver-link">← Volver al Archivo de Casos</a>
+    </div>
+
+    <script>
+        function verificarRespuesta() {
+            let respuesta = document.getElementById("respuestaUsuario").value;
+            respuesta = respuesta.toLowerCase().trim();
+            let mensaje = document.getElementById("resultado");
+
+            // Palabras clave: Rebobinar, cinta, principio, regresar
+            if (respuesta.includes("rebobin") || respuesta.includes("regres") || respuesta.includes("principio") || respuesta.includes("atras")) {
+                mensaje.innerHTML = "¡EXACTO! 📼🔫 <br> Un muerto no puede <strong>rebobinar</strong> la cinta después de dispararse para que el detective la escuche desde el principio.";
+                mensaje.className = "win";
+            } else if (respuesta === "") {
+                mensaje.innerHTML = "El silencio en la cinta es sospechoso, pero tu silencio no resuelve el caso.";
+                mensaje.className = "";
+            } else if (respuesta.includes("pistola") || respuesta.includes("mano") || respuesta.includes("guantes")) {
+                mensaje.innerHTML = "La posición del arma era perfecta. El error no está en la pistola.";
+                mensaje.className = "fail";
+            } else if (respuesta.includes("voz")) {
+                mensaje.innerHTML = "Era su voz real. No fue una imitación.";
+                mensaje.className = "fail";
+            } else {
+                mensaje.innerHTML = "INCORRECTO. Piensa mecánicamente: ¿Qué pasa cuando grabas algo y luego quieres escucharlo?";
+                mensaje.className = "fail";
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso #005: El Camionero</title>
+    <style>
+        /* Estilos visuales con tema "Tráfico / Lógica Lateral / Verde" */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #050f05; /* Fondo negro verdoso muy oscuro */
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .caso-card {
+            background-color: #0a1a0a;
+            border: 1px solid #143d14;
+            padding: 30px;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(46, 204, 113, 0.1);
+            position: relative;
+        }
+
+        /* Etiqueta de Nivel */
+        .badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background-color: #27ae60;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            font-family: sans-serif;
+        }
+
+        h1 { 
+            color: #2ecc71; /* Verde brillante */
+            text-align: center; 
+            border-bottom: 2px solid #143d14; 
+            padding-bottom: 10px; 
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        h3 { color: #27ae60; margin-top: 25px; }
+        
+        .pista-box {
+            background-color: #0f220f;
+            padding: 15px;
+            border-left: 4px solid #2ecc71;
+            margin: 20px 0;
+            font-style: italic;
+            line-height: 1.5;
+            color: #aebfb2;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 12px;
+            font-size: 16px;
+            background: #142914;
+            border: 1px solid #2ecc71;
+            color: white;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #2ecc71;
+            border: none;
+            color: #050f05;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        button:hover { background-color: #27ae60; color: white; }
+
+        #resultado {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .win { background-color: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; }
+        .fail { background-color: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+
+        .volver-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #555;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .volver-link:hover { color: #2ecc71; }
+
+    </style>
+</head>
+<body>
+
+    <div class="caso-card">
+        <div class="badge">NIVEL: PENSAMIENTO LATERAL</div>
+        <h1>EXPEDIENTE #005</h1>
+        <p><strong>Lugar:</strong> Calle "La Uni-Direccional".</p>
+        <p><strong>Infracción:</strong> Sentido contrario.</p>
+        
+        <p>Un camionero baja por una calle de sentido único en dirección contraria a todos los demás vehículos.</p>
+
+        <div class="pista-box">
+            <ul>
+                <li>Hay un oficial de policía parado en la esquina mirando directamente al camionero.</li>
+                <li>El cartel de "PROHIBIDO EL PASO" es enorme y visible.</li>
+                <li>El policía saluda al camionero amablemente con la mano.</li>
+                <li>El policía NO le pone ninguna multa ni le llama la atención.</li>
+            </ul>
+        </div>
+
+        <h3>¿Por qué no lo multó?</h3>
+        <p>La respuesta es corta y lógica. ¿Qué hacía el camionero?</p>
+        
+        <div style="text-align: center;">
+            <input type="text" id="respuestaUsuario" placeholder="Escribe tu deducción...">
+            <button onclick="verificarRespuesta()">RESOLVER</button>
+        </div>
+
+        <div id="resultado"></div>
+
+        <a href="misterios.html" class="volver-link">← Volver al Archivo de Casos</a>
+    </div>
+
+    <script>
+        function verificarRespuesta() {
+            let respuesta = document.getElementById("respuestaUsuario").value;
+            respuesta = respuesta.toLowerCase().trim();
+            let mensaje = document.getElementById("resultado");
+
+            // Validamos variaciones de la respuesta correcta
+            if (respuesta.includes("camin") || respuesta.includes("pie") || respuesta.includes("andando") || respuesta.includes("sin camion") || respuesta.includes("sin camión")) {
+                mensaje.innerHTML = "¡CORRECTO! 🚶‍♂️🚛 <br> Ser 'camionero' es su profesión, pero en ese momento iba <strong>caminando</strong>.";
+                mensaje.className = "win";
+            } else if (respuesta === "") {
+                mensaje.innerHTML = "Escribe algo antes de que el semáforo cambie.";
+                mensaje.className = "";
+            } else if (respuesta.includes("ambulancia") || respuesta.includes("policia") || respuesta.includes("emergencia")) {
+                mensaje.innerHTML = "No. No era una emergencia ni un vehículo oficial.";
+                mensaje.className = "fail";
+            } else if (respuesta.includes("marcha atras") || respuesta.includes("retroceso")) {
+                mensaje.innerHTML = "Buen intento, pero ir marcha atrás también es ilegal en sentido contrario.";
+                mensaje.className = "fail";
+            } else {
+                mensaje.innerHTML = "INCORRECTO. Tu cerebro asume que un camionero siempre conduce un camión. ¿Y si no?";
+                mensaje.className = "fail";
+            }
+        }
+    </script>
+
+</body>
+</html>
