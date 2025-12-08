@@ -106,21 +106,43 @@
             background-color: #222233;
         }
 
-        .cat-icon { font-size: 3.5rem; margin-bottom: 20px; display: inline-block; }
+        /* Controlamos el tamaño de la imagen */
+        .cat-icon img {
+            width: 80px;  /* Un buen tamaño para categorías principales */
+            height: 80px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 2px rgba(255,255,255,0.3)); /* Un brillo base sutil */
+        }
         .cat-title { font-size: 1.5rem; margin: 10px 0; color: white; font-weight: bold; }
         .cat-desc { font-size: 0.9rem; color: #a0a0b0; }
 
         /* Estilos específicos por categoría para darles color */
-        .cat-misterios:hover { border-color: var(--acento-morado); box-shadow: 0 10px 30px rgba(124, 77, 255, 0.2); }
+        /* Misterios: Brillo Morado */
+        .cat-misterios:hover .cat-icon img {
+            transform: scale(1.1) rotate(-5deg); /* Pequeño movimiento divertido */
+            filter: drop-shadow(0 0 15px #7c4dff);
+        }
         .cat-misterios .cat-icon { color: var(--acento-morado); }
 
-        .cat-acertijos:hover { border-color: var(--acento-azul); box-shadow: 0 10px 30px rgba(0, 229, 255, 0.2); }
+        /* Acertijos: Brillo Azul Cian */
+        .cat-acertijos:hover .cat-icon img {
+            transform: scale(1.1) rotate(5deg);
+            filter: drop-shadow(0 0 15px #00e5ff);
+        }
         .cat-acertijos .cat-icon { color: var(--acento-azul); }
 
-        .cat-puzzles:hover { border-color: var(--acento-verde); box-shadow: 0 10px 30px rgba(0, 255, 157, 0.2); }
+        /* Puzzles: Brillo Verde */
+        .cat-puzzles:hover .cat-icon img {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 15px #00ff9d);
+        }
         .cat-puzzles .cat-icon { color: var(--acento-verde); }
 
-        .cat-games { opacity: 0.5; cursor: not-allowed; }
+        /* Games: (Opcional si lo habilitas luego) */
+        .cat-games:hover .cat-icon img {
+            filter: drop-shadow(0 0 15px #ff5252);
+        }
         .cat-games .cat-icon { color: #555; }
 
         /* --- SECCIÓN DE SUGERENCIAS (Featured) --- */
@@ -179,10 +201,13 @@
 
         <section>
             <h2 class="section-title">Explora las Secciones</h2>
+
             <div class="categories-grid">
                 
                 <a href="misterios.html" class="category-card cat-misterios">
-                    <div class="cat-icon">🕵️‍♀️</div>
+                    <div class="cat-icon">
+                        <img src="./images/cat-misterio.png" alt="Icono Lupa Detective">
+                    </div>
                     <div class="cat-title">Misterios Lógicos</div>
                     <div class="cat-desc">
                         Conviértete en detective. Lee expedientes, analiza coartadas y encuentra la contradicción que delata al culpable.
@@ -190,7 +215,9 @@
                 </a>
 
                 <a href="#" class="category-card cat-acertijos">
-                    <div class="cat-icon">💡</div>
+                    <div class="cat-icon">
+                        <img src="./images/cat-acertijo.png" alt="Icono Foco Idea">
+                    </div>
                     <div class="cat-title">Acertijos Laterales</div>
                     <div class="cat-desc">
                         Historias cortas con finales sorprendentes. La respuesta nunca es la obvia. Tienes que pensar "fuera de la caja".
@@ -198,7 +225,9 @@
                 </a>
 
                 <a href="puzzles.html" class="category-card cat-puzzles">
-                    <div class="cat-icon">🧩</div>
+                    <div class="cat-icon">
+                        <img src="./images/cat-puzzle.png" alt="Icono Rompecabezas">
+                    </div>
                     <div class="cat-title">Puzzles Visuales</div>
                     <div class="cat-desc">
                         Desafíos de patrones, ilusiones ópticas y problemas espaciales para entrenar tu percepción.
@@ -206,7 +235,9 @@
                 </a>
 
                 <div class="category-card cat-games">
-                    <div class="cat-icon">🎮</div>
+                    <div class="cat-icon">
+                        <img src="./images/cat-game.png" alt="Icono Gamepad" style="opacity: 0.5;">
+                    </div>
                     <div class="cat-title">Videojuegos</div>
                     <div class="cat-desc">
                         [PRÓXIMAMENTE] Experiencias interactivas y minijuegos de lógica directamente en tu navegador.
