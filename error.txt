@@ -23,3 +23,5 @@ Para probar esto sin miedo a romper nada, hagan este ejercicio juntos ahora:
 7.  **Hijo:** Haz `git pull` y observa cómo el archivo desaparece (o se vacía) limpiamente.
 
 ¿Te animas a probarlo?
+
+231
