@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serie de Acertijos Misteriosos</title>
+    <style>
+        /* TODOS LOS ESTILOS ANTERIORES PERMANECEN IGUAL */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+        
+        body {
+            background-color: #0a0e14;
+            color: #f0e6d2;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(29, 39, 54, 0.3) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(29, 39, 54, 0.3) 0%, transparent 20%);
+        }
+        
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 25px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        h1 {
+            color: #f0e6d2;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+        }
+        
+        .subtitle {
+            color: #b8b8b8;
+            font-style: italic;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .riddles-sidebar {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(18, 24, 33, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(64, 115, 158, 0.2);
+            max-height: 700px;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+        
+        .sidebar-header h2 {
+            color: #f0e6d2;
+            font-size: 1.4rem;
+        }
+        
+        .add-riddle-btn {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.4);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .add-riddle-btn:hover {
+            background: rgba(46, 204, 113, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .riddle-card {
+            background: rgba(30, 40, 60, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 5px solid #3498db;
+            position: relative;
+        }
+        
+        .riddle-card:hover {
+            transform: translateY(-5px);
+            background: rgba(40, 55, 85, 0.6);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        .riddle-card.active {
+            border-left-color: #f1c40f;
+            background: rgba(40, 55, 85, 0.7);
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.2);
+        }
+        
+        .new-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .difficulty-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .easy {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.4);
+        }
+        
+        .medium {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            border: 1px solid rgba(52, 152, 219, 0.4);
+        }
+        
+        .hard {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.4);
+        }
+        
+        .riddle-title {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            color: #f0e6d2;
+        }
+        
+        .riddle-preview {
+            color: #b8b8b8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .riddle-display {
+            flex: 2;
+            min-width: 300px;
+            background: rgba(18, 24, 33, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(64, 115, 158, 0.3);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .difficulty-indicator {
+            height: 8px;
+            background: linear-gradient(90deg, #2ecc71 0%, #3498db 50%, #e74c3c 100%);
+            position: relative;
+        }
+        
+        .difficulty-marker {
+            position: absolute;
+            top: -5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px currentColor;
+            transition: left 0.5s ease;
+        }
+        
+        .riddle-header {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(52, 152, 219, 0.2);
+            background: rgba(13, 19, 29, 0.7);
+        }
+        
+        .current-riddle-title {
+            color: #f0e6d2;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .current-riddle-subtitle {
+            color: #b8b8b8;
+            font-style: italic;
+        }
+        
+        .riddle-body {
+            padding: 30px;
+            line-height: 1.6;
+        }
+        
+        .riddle-text {
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 300;
+            color: #e8e6e3;
+            line-height: 1.8;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .riddle-line {
+            margin-bottom: 15px;
+            display: block;
+            animation: slideInLine 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        @keyframes slideInLine {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .clues-section {
+            margin-top: 30px;
+            background: rgba(13, 19, 29, 0.6);
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .clues-header {
+            color: #3498db;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .clue {
+            display: none;
+            padding: 12px 15px;
+            margin-bottom: 12px;
+            background: rgba(30, 40, 60, 0.5);
+            border-radius: 8px;
+            color: #c5d1e6;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .clue.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .clue-number {
+            color: #3498db;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .btn {
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-clue {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            border: 1px solid rgba(52, 152, 219, 0.4);
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .btn-clue:hover {
+            background: rgba(52, 152, 219, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        }
+        
+        .answer-section {
+            margin-top: 30px;
+            background: rgba(13, 19, 29, 0.6);
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .answer-title {
+            color: #2ecc71;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .answer-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(30, 40, 60, 0.5);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 8px;
+            color: #f0e6d2;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .answer-input:focus {
+            outline: none;
+            border-color: #2ecc71;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
+        }
+        
+        .btn-submit {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.4);
+            flex: 1;
+        }
+        
+        .btn-submit:hover {
+            background: rgba(46, 204, 113, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.2);
+        }
+        
+        .btn-reset {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.4);
+            flex: 1;
+        }
+        
+        .btn-reset:hover {
+            background: rgba(231, 76, 60, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.2);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .result.success {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            display: block;
+        }
+        
+        .result.error {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            display: block;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(13, 19, 29, 0.7);
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-item {
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #b8b8b8;
+            font-size: 0.9rem;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #7a8ca5;
+            font-size: 0.9rem;
+            margin-top: 40px;
+            border-top: 1px solid rgba(52, 152, 219, 0.1);
+        }
+        
+        /* Modal para agregar nuevos acertijos */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: rgba(18, 24, 33, 0.95);
+            width: 90%;
+            max-width: 800px;
+            border-radius: 15px;
+            padding: 30px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(64, 115, 158, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(52, 152, 219, 0.3);
+            padding-bottom: 15px;
+        }
+        
+        .modal-title {
+            color: #f0e6d2;
+            font-size: 1.8rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            color: #b8b8b8;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(30, 40, 60, 0.5);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 8px;
+            color: #f0e6d2;
+            font-size: 1rem;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .difficulty-option {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .difficulty-option.easy {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+        
+        .difficulty-option.medium {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+        
+        .difficulty-option.hard {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+        
+        .difficulty-option.selected {
+            border-color: currentColor;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-add {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.4);
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+        
+        .btn-add:hover {
+            background: rgba(46, 204, 113, 0.3);
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .riddles-sidebar {
+                max-height: 400px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .current-riddle-title {
+                font-size: 1.6rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .header {
+                padding: 15px 0;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .riddle-body {
+                padding: 20px 15px;
+            }
+            
+            .riddle-text {
+                font-size: 1.2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                min-width: 100%;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .modal-content {
+                padding: 20px 15px;
+                width: 95%;
+            }
+        }
+        
+        /* Scrollbar personalizada */
+        .riddles-sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .riddles-sidebar::-webkit-scrollbar-track {
+            background: rgba(30, 40, 60, 0.5);
+            border-radius: 10px;
+        }
+        
+        .riddles-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(52, 152, 219, 0.5);
+            border-radius: 10px;
+        }
+        
+        .riddles-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(52, 152, 219, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1>🔍 SERIE DE ACERTIJOS 🔍</h1>
+            <div class="subtitle">Desafía tu mente con misterios de diferentes niveles de dificultad al estilo Sherlock Holmes</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="riddles-sidebar">
+                <div class="sidebar-header">
+                    <h2>Acertijos Disponibles</h2>
+                <!--para agregar un nuevo acertijo cambiar el hidden del boton para agregar -->
+                    <button hidden class="add-riddle-btn" id="add-riddle-btn">+ Nuevo Acertijo</button>
+                <!--para agregar un nuevo acertijo cambiar el hidden del boton para agregar-->    
+                </div>
+                <div id="riddles-container">
+                    <!-- Los acertijos se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+            
+            <div class="riddle-display">
+                <div class="difficulty-indicator">
+                    <div class="difficulty-marker" id="difficulty-marker" style="left: 25%; background-color: #2ecc71;"></div>
+                </div>
+                
+                <div class="riddle-header">
+                    <div class="current-riddle-title" id="current-riddle-title">Cargando acertijo...</div>
+                    <div class="current-riddle-subtitle" id="current-riddle-subtitle"></div>
+                </div>
+                
+                <div class="riddle-body">
+                    <div class="riddle-text" id="riddle-text">
+                        <!-- El acertijo se cargará aquí dinámicamente -->
+                    </div>
+                    
+                    <div class="clues-section">
+                        <div class="clues-header">
+                            <span><span class="icon">🔍</span> Pistas para pensar como Sherlock</span>
+                            <span id="clues-counter">Pista <span id="current-clue">0</span>/<span id="total-clues">0</span></span>
+                        </div>
+                        <div id="clues-container">
+                            <!-- Las pistas se cargarán aquí dinámicamente -->
+                        </div>
+                    </div>
+                    
+                    <div class="controls">
+                        <button class="btn btn-clue" id="show-clue-btn">
+                            <span class="icon">💡</span> Mostrar una pista
+                        </button>
+                    </div>
+                    
+                    <div class="answer-section">
+                        <div class="answer-title">
+                            <span class="icon">🔎</span> ¿Cuál es tu respuesta?
+                        </div>
+                        <input type="text" class="answer-input" id="answer-input" placeholder="Escribe tu respuesta aquí...">
+                        <div class="controls">
+                            <button class="btn btn-submit" id="submit-btn">
+                                <span class="icon">✓</span> Verificar respuesta
+                            </button>
+                            <button class="btn btn-reset" id="reset-btn">
+                                <span class="icon">↺</span> Reiniciar acertijo
+                            </button>
+                        </div>
+                        <div class="result" id="result"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="solved-count">0</div>
+                <div class="stat-label">Acertijos Resueltos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="current-streak">0</div>
+                <div class="stat-label">Racha Actual</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="total-clues-used">0</div>
+                <div class="stat-label">Pistas Usadas</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Serie de Acertijos Misteriosos • Desarrollado por el Club de Detectives • Niveles: <span style="color:#2ecc71">Fácil</span> - <span style="color:#3498db">Medio</span> - <span style="color:#e74c3c">Difícil</span>
+        </div>
+    </div>
+    
+    <!-- Modal para agregar nuevos acertijos -->
+    <div class="modal" id="add-riddle-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Agregar Nuevo Acertijo</h3>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <form id="add-riddle-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Título del Acertijo</label>
+                        <input type="text" class="form-input" id="riddle-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Subtítulo/Descripción</label>
+                        <input type="text" class="form-input" id="riddle-subtitle" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Dificultad</label>
+                    <div class="difficulty-selector">
+                        <div class="difficulty-option easy selected" data-difficulty="easy">Fácil</div>
+                        <div class="difficulty-option medium" data-difficulty="medium">Medio</div>
+                        <div class="difficulty-option hard" data-difficulty="hard">Difícil</div>
+                    </div>
+                    <input type="hidden" id="riddle-difficulty" value="easy">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Texto del Acertijo (una línea por verso)</label>
+                    <textarea class="form-input form-textarea" id="riddle-text-input" placeholder="Escribe cada verso en una línea separada..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Pistas (una por línea)</label>
+                    <textarea class="form-input form-textarea" id="riddle-clues" placeholder="Escribe cada pista en una línea separada..." required></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Respuesta Correcta</label>
+                        <input type="text" class="form-input" id="riddle-answer" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Respuestas Aceptadas (separadas por comas)</label>
+                        <input type="text" class="form-input" id="riddle-accepted-answers" placeholder="ej: la memoria, memoria, el recuerdo" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-add">Agregar Acertijo</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos inicial de acertijos
+        let riddlesDatabase = [
+            {
+                id: 1,
+                title: "El Testigo Silencioso",
+                difficulty: "medium",
+                difficultyPosition: "50%",
+                difficultyColor: "#3498db",
+                subtitle: "Un acertijo de nivel medio",
+                lines: [
+                    "Soy testigo de todo, pero nunca hablo.",
+                    "Muestro la verdad, pero a menudo me disfrazo.",
+                    "Los sabios me buscan, los necios me temen.",
+                    "Tengo llaves sin cerraduras, espacio sin puertas.",
+                    "Puedo ser un mapa, pero no señalo caminos.",
+                    "Soy el principio del fin, y el final de todo lugar."
+                ],
+                clues: [
+                    "No soy un objeto físico, pero me pueden contener.",
+                    "Mi valor cambia según quién me observe.",
+                    "Los detectives me examinan, los poetas me exploran.",
+                    "Contengo todas las respuestas, pero hago nuevas preguntas."
+                ],
+                answer: "el tiempo",
+                acceptedAnswers: ["el tiempo", "tiempo", "el tiempo es", "es el tiempo"],
+                isNew: false
+            },
+            {
+                id: 2,
+                title: "La Llave Sin Cerradura",
+                difficulty: "medium",
+                difficultyPosition: "50%",
+                difficultyColor: "#3498db",
+                subtitle: "Un acertijo de nivel medio",
+                lines: [
+                    "Abro caminos pero no tengo puertas,",
+                    "revelo secretos pero no tengo palabras.",
+                    "Soy el puente entre lo conocido y lo desconocido,",
+                    "la luz en la oscuridad, el orden en el caos.",
+                    "Conmigo todo es posible, sin mí nada se comprende,",
+                    "soy el comienzo de todo gran descubrimiento."
+                ],
+                clues: [
+                    "Los niños me tienen en abundancia, los adultos a veces me pierden.",
+                    "Soy peligroso en manos equivocadas, pero invaluable en las correctas.",
+                    "Einstein me consideraba más importante que el conocimiento.",
+                    "Sin mí, la ciencia no avanzaría."
+                ],
+                answer: "la imaginación",
+                acceptedAnswers: ["la imaginación", "imaginación", "la creatividad", "creatividad", "el ingenio"],
+                isNew: false
+            },
+            {
+                id: 3,
+                title: "El Ladrón de Almas",
+                difficulty: "hard",
+                difficultyPosition: "75%",
+                difficultyColor: "#e74c3c",
+                subtitle: "Un acertijo de nivel difícil",
+                lines: [
+                    "Robo sin manos, guardo sin caja,",
+                    "muestro sin ojos y hablo sin boca.",
+                    "Tengo ciudades sin casas, bosques sin árboles,",
+                    "mares sin agua y montañas sin piedra.",
+                    "Soy el reflejo de la realidad, pero no soy real,",
+                    "el espejo del mundo en un mundo paralelo."
+                ],
+                clues: [
+                    "Los escritores me habitan, los lectores me visitan.",
+                    "Puedo ser tan vasto como el universo o tan pequeño como un átomo.",
+                    "Contengo mundos completos, pero caben en un estante.",
+                    "Soy el sueño de los autores y el refugio de los soñadores."
+                ],
+                answer: "un libro",
+                acceptedAnswers: ["un libro", "libro", "los libros", "la literatura", "una novela", "el libro"],
+                isNew: false
+            },
+            {
+                id: 4,
+                title: "El Fantasma en el Espejo",
+                difficulty: "easy",
+                difficultyPosition: "25%",
+                difficultyColor: "#2ecc71",
+                subtitle: "Un acertijo de nivel fácil",
+                lines: [
+                    "Veo tu reflejo pero no soy cristal,",
+                    "te muestro la verdad pero a veces engaño.",
+                    "Soy el pasado que nunca volverá,",
+                    "y el futuro que aún no llega.",
+                    "Los artistas me buscan, los mentirosos me temen,",
+                    "y todos me tienen, pero pocos me ven."
+                ],
+                clues: [
+                    "No soy físico, pero siempre estoy contigo.",
+                    "Guardo todos tus recuerdos, los buenos y los malos.",
+                    "Los científicos me estudian, los filósofos me debaten."
+                ],
+                answer: "la memoria",
+                acceptedAnswers: ["la memoria", "memoria", "el recuerdo", "recuerdo", "la mente"],
+                isNew: false
+            }
+        ];
+
+        // Variables de estado de la aplicación
+        let currentRiddleId = 1;
+        let currentClueIndex = 0;
+        let solvedRiddles = new Set();
+        let currentStreak = 0;
+        let totalCluesUsed = 0;
+        let nextRiddleId = 5; // Empezamos en 5 porque ya hay 4 acertijos
+
+        // Elementos del DOM
+        const riddlesContainer = document.getElementById('riddles-container');
+        const currentRiddleTitle = document.getElementById('current-riddle-title');
+        const currentRiddleSubtitle = document.getElementById('current-riddle-subtitle');
+        const riddleText = document.getElementById('riddle-text');
+        const cluesContainer = document.getElementById('clues-container');
+        const showClueBtn = document.getElementById('show-clue-btn');
+        const answerInput = document.getElementById('answer-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const resultDiv = document.getElementById('result');
+        const currentClueSpan = document.getElementById('current-clue');
+        const totalCluesSpan = document.getElementById('total-clues');
+        const difficultyMarker = document.getElementById('difficulty-marker');
+        const solvedCountSpan = document.getElementById('solved-count');
+        const currentStreakSpan = document.getElementById('current-streak');
+        const totalCluesUsedSpan = document.getElementById('total-clues-used');
+        const addRiddleBtn = document.getElementById('add-riddle-btn');
+        const addRiddleModal = document.getElementById('add-riddle-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const addRiddleForm = document.getElementById('add-riddle-form');
+        const difficultyOptions = document.querySelectorAll('.difficulty-option');
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar desde localStorage si existe
+            loadFromLocalStorage();
+            
+            renderRiddlesList();
+            if (riddlesDatabase.length > 0) {
+                loadRiddle(currentRiddleId);
+            }
+            updateStats();
+            
+            // Configurar eventos
+            showClueBtn.addEventListener('click', showClue);
+            submitBtn.addEventListener('click', checkAnswer);
+            resetBtn.addEventListener('click', resetCurrentRiddle);
+            addRiddleBtn.addEventListener('click', () => addRiddleModal.style.display = 'flex');
+            closeModalBtn.addEventListener('click', () => addRiddleModal.style.display = 'none');
+            
+            // Seleccionador de dificultad
+            difficultyOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    difficultyOptions.forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    document.getElementById('riddle-difficulty').value = this.dataset.difficulty;
+                });
+            });
+            
+            // Formulario para agregar acertijos
+            addRiddleForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                addNewRiddle();
+            });
+            
+            // Permitir enviar respuesta con Enter
+            answerInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkAnswer();
+                }
+            });
+            
+            // Cerrar modal al hacer clic fuera
+            window.addEventListener('click', function(e) {
+                if (e.target === addRiddleModal) {
+                    addRiddleModal.style.display = 'none';
+                }
+            });
+            
+            // Hacer scroll al principio de la página al cargar
+            window.scrollTo(0, 0);
+        });
+
+        // Renderizar la lista de acertijos
+        function renderRiddlesList() {
+            riddlesContainer.innerHTML = '';
+            
+            // Ordenar acertijos: primero los nuevos, luego por ID descendente
+            const sortedRiddles = [...riddlesDatabase].sort((a, b) => {
+                if (a.isNew && !b.isNew) return -1;
+                if (!a.isNew && b.isNew) return 1;
+                return b.id - a.id;
+            });
+            
+            sortedRiddles.forEach(riddle => {
+                const card = document.createElement('div');
+                card.className = 'riddle-card';
+                if (riddle.id === currentRiddleId) {
+                    card.classList.add('active');
+                }
+                card.setAttribute('data-id', riddle.id);
+                
+                const difficultyClass = riddle.difficulty === 'easy' ? 'easy' : 
+                                        riddle.difficulty === 'medium' ? 'medium' : 'hard';
+                
+                card.innerHTML = `
+                    ${riddle.isNew ? '<div class="new-badge">NUEVO</div>' : ''}
+                    <div class="difficulty-badge ${difficultyClass}">${riddle.difficulty.toUpperCase()}</div>
+                    <div class="riddle-title">${riddle.title}</div>
+                    <div class="riddle-preview">${riddle.lines[0].substring(0, 60)}...</div>
+                `;
+                
+                card.addEventListener('click', function() {
+                    const riddleId = parseInt(this.getAttribute('data-id'));
+                    selectRiddle(riddleId);
+                });
+                
+                riddlesContainer.appendChild(card);
+            });
+            
+            // Guardar en localStorage
+            saveToLocalStorage();
+        }
+
+        // Cargar un acertijo específico por ID
+        function loadRiddle(id) {
+            const riddle = riddlesDatabase.find(r => r.id === id);
+            if (!riddle) return;
+            
+            currentRiddleId = id;
+            
+            // Actualizar marcador de dificultad
+            difficultyMarker.style.left = riddle.difficultyPosition;
+            difficultyMarker.style.backgroundColor = riddle.difficultyColor;
+            
+            // Actualizar título y subtítulo
+            currentRiddleTitle.textContent = riddle.title;
+            currentRiddleSubtitle.textContent = riddle.subtitle;
+            
+            // Actualizar texto del acertijo
+            riddleText.innerHTML = '';
+            riddle.lines.forEach((line, i) => {
+                const lineElement = document.createElement('div');
+                lineElement.className = 'riddle-line';
+                lineElement.textContent = line;
+                lineElement.style.animationDelay = `${i * 0.1}s`;
+                riddleText.appendChild(lineElement);
+            });
+            
+            // Actualizar pistas
+            cluesContainer.innerHTML = '';
+            riddle.clues.forEach((clue, i) => {
+                const clueElement = document.createElement('div');
+                clueElement.className = 'clue';
+                clueElement.id = `clue${i+1}`;
+                clueElement.innerHTML = `<span class="clue-number">Pista ${i+1}:</span> ${clue}`;
+                cluesContainer.appendChild(clueElement);
+            });
+            
+            // Actualizar contador de pistas
+            totalCluesSpan.textContent = riddle.clues.length;
+            currentClueSpan.textContent = '0';
+            
+            // Reiniciar estado del acertijo actual
+            resetCurrentRiddleState();
+            
+            // Actualizar tarjetas activas
+            document.querySelectorAll('.riddle-card').forEach(card => {
+                card.classList.remove('active');
+                if (parseInt(card.getAttribute('data-id')) === id) {
+                    card.classList.add('active');
+                }
+            });
+            
+            // Quitar el indicador "NUEVO" si existe
+            const riddleIndex = riddlesDatabase.findIndex(r => r.id === id);
+            if (riddleIndex !== -1 && riddlesDatabase[riddleIndex].isNew) {
+                riddlesDatabase[riddleIndex].isNew = false;
+                renderRiddlesList();
+            }
+            
+            // Verificar si el acertijo ya fue resuelto
+            if (solvedRiddles.has(id)) {
+                showResult(`Ya resolviste este acertijo. La respuesta era: "${riddle.answer}".`, 'success');
+                answerInput.disabled = true;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="icon">✓</span> Ya resuelto';
+                submitBtn.style.opacity = '0.7';
+                submitBtn.style.cursor = 'not-allowed';
+            } else {
+                answerInput.disabled = false;
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span class="icon">✓</span> Verificar respuesta';
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+            }
+            
+            // Hacer scroll al principio del acertijo
+            setTimeout(() => {
+                document.querySelector('.riddle-display').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }, 100);
+        }
+
+        // Seleccionar un acertijo diferente por ID
+        function selectRiddle(id) {
+            currentClueIndex = 0;
+            loadRiddle(id);
+        }
+
+        // Mostrar una pista
+        function showClue() {
+            const riddle = riddlesDatabase.find(r => r.id === currentRiddleId);
+            if (!riddle) return;
+            
+            if (currentClueIndex < riddle.clues.length) {
+                // Ocultar pista anterior si existe
+                if (currentClueIndex > 0) {
+                    document.getElementById(`clue${currentClueIndex}`).classList.remove('active');
+                }
+                
+                // Incrementar índice y mostrar nueva pista
+                currentClueIndex++;
+                document.getElementById(`clue${currentClueIndex}`).classList.add('active');
+                currentClueSpan.textContent = currentClueIndex;
+                
+                // Actualizar estadísticas
+                totalCluesUsed++;
+                totalCluesUsedSpan.textContent = totalCluesUsed;
+                
+                // Deshabilitar botón si ya mostró todas las pistas
+                if (currentClueIndex === riddle.clues.length) {
+                    showClueBtn.disabled = true;
+                    showClueBtn.innerHTML = '<span class="icon">💡</span> Sin pistas disponibles';
+                    showClueBtn.style.opacity = '0.7';
+                    showClueBtn.style.cursor = 'not-allowed';
+                }
+                
+                saveToLocalStorage();
+            }
+        }
+
+        // Verificar respuesta
+        function checkAnswer() {
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            const riddle = riddlesDatabase.find(r => r.id === currentRiddleId);
+            if (!riddle) return;
+            
+            if (!userAnswer) {
+                showResult('Por favor, escribe una respuesta primero.', 'error');
+                return;
+            }
+            
+            // Verificar si la respuesta es correcta
+            let isCorrect = false;
+            for (let answer of riddle.acceptedAnswers) {
+                if (userAnswer === answer.toLowerCase()) {
+                    isCorrect = true;
+                    break;
+                }
+            }
+            
+            if (isCorrect) {
+                // Marcar como resuelto
+                if (!solvedRiddles.has(currentRiddleId)) {
+                    solvedRiddles.add(currentRiddleId);
+                    currentStreak++;
+                }
+                
+                showResult(`¡Excelente deducción! Efectivamente, la respuesta correcta es: "${riddle.answer}".`, 'success');
+                answerInput.disabled = true;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="icon">✓</span> Respuesta correcta';
+                submitBtn.style.opacity = '0.7';
+                submitBtn.style.cursor = 'not-allowed';
+                
+                // Actualizar estadísticas
+                updateStats();
+                
+                // Avanzar automáticamente al siguiente acertijo después de 3 segundos
+                setTimeout(() => {
+                    nextRiddle();
+                }, 3000);
+                
+                saveToLocalStorage();
+            } else {
+                showResult('Respuesta incorrecta. Sigue pensando... recuerda las pistas.', 'error');
+                currentStreak = 0;
+                updateStats();
+                
+                // Agitar el input para indicar error
+                answerInput.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    answerInput.style.animation = '';
+                }, 500);
+            }
+        }
+
+        // Ir al siguiente acertijo
+        function nextRiddle() {
+            // Obtener todos los IDs de acertijos no resueltos
+            const unsolvedIds = riddlesDatabase
+                .filter(r => !solvedRiddles.has(r.id))
+                .map(r => r.id);
+            
+            if (unsolvedIds.length > 0) {
+                // Buscar el siguiente ID mayor al actual
+                const currentIndex = unsolvedIds.indexOf(currentRiddleId);
+                const nextIndex = (currentIndex + 1) % unsolvedIds.length;
+                selectRiddle(unsolvedIds[nextIndex]);
+            } else {
+                // Si todos están resueltos, ir al primero
+                selectRiddle(riddlesDatabase[0].id);
+            }
+        }
+
+        // Reiniciar el acertijo actual
+        function resetCurrentRiddle() {
+            resetCurrentRiddleState();
+        }
+
+        // Reiniciar el estado del acertijo actual
+        function resetCurrentRiddleState() {
+            // Ocultar todas las pistas
+            const clues = document.querySelectorAll('.clue');
+            clues.forEach(clue => {
+                clue.classList.remove('active');
+            });
+            
+            // Reiniciar contador de pistas
+            currentClueIndex = 0;
+            currentClueSpan.textContent = '0';
+            
+            // Habilitar botón de pistas
+            showClueBtn.disabled = false;
+            showClueBtn.innerHTML = '<span class="icon">💡</span> Mostrar una pista';
+            showClueBtn.style.opacity = '1';
+            showClueBtn.style.cursor = 'pointer';
+            
+            // Limpiar respuesta
+            answerInput.value = '';
+            answerInput.disabled = false;
+            
+            // Habilitar botón de verificación
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span class="icon">✓</span> Verificar respuesta';
+            submitBtn.style.opacity = '1';
+            submitBtn.style.cursor = 'pointer';
+            
+            // Ocultar resultado
+            resultDiv.style.display = 'none';
+        }
+
+        // Mostrar resultado
+        function showResult(message, type) {
+            resultDiv.textContent = message;
+            resultDiv.className = 'result ' + type;
+            resultDiv.style.display = 'block';
+            
+            // Ocultar resultado después de 5 segundos si es error
+            if (type === 'error') {
+                setTimeout(() => {
+                    resultDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Actualizar estadísticas
+        function updateStats() {
+            solvedCountSpan.textContent = solvedRiddles.size;
+            currentStreakSpan.textContent = currentStreak;
+            totalCluesUsedSpan.textContent = totalCluesUsed;
+        }
+
+        // Agregar un nuevo acertijo
+        function addNewRiddle() {
+            const title = document.getElementById('riddle-title').value.trim();
+            const subtitle = document.getElementById('riddle-subtitle').value.trim();
+            const difficulty = document.getElementById('riddle-difficulty').value;
+            const text = document.getElementById('riddle-text-input').value.trim();
+            const clues = document.getElementById('riddle-clues').value.trim();
+            const answer = document.getElementById('riddle-answer').value.trim();
+            const acceptedAnswers = document.getElementById('riddle-accepted-answers').value.trim();
+            
+            if (!title || !subtitle || !text || !clues || !answer || !acceptedAnswers) {
+                alert('Por favor completa todos los campos.');
+                return;
+            }
+            
+            // Procesar las líneas del acertijo
+            const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+            
+            // Procesar las pistas
+            const cluesArray = clues.split('\n').map(clue => clue.trim()).filter(clue => clue);
+            
+            // Procesar respuestas aceptadas
+            const acceptedAnswersArray = acceptedAnswers.split(',').map(a => a.trim()).filter(a => a);
+            
+            // Determinar posición y color según dificultad
+            let difficultyPosition, difficultyColor;
+            switch(difficulty) {
+                case 'easy':
+                    difficultyPosition = '25%';
+                    difficultyColor = '#2ecc71';
+                    break;
+                case 'medium':
+                    difficultyPosition = '50%';
+                    difficultyColor = '#3498db';
+                    break;
+                case 'hard':
+                    difficultyPosition = '75%';
+                    difficultyColor = '#e74c3c';
+                    break;
+            }
+            
+            // Crear nuevo acertijo
+            const newRiddle = {
+                id: nextRiddleId++,
+                title,
+                difficulty,
+                difficultyPosition,
+                difficultyColor,
+                subtitle,
+                lines,
+                clues: cluesArray,
+                answer,
+                acceptedAnswers: [answer, ...acceptedAnswersArray],
+                isNew: true
+            };
+            
+            // Agregar al principio del array
+            riddlesDatabase.unshift(newRiddle);
+            
+            // Renderizar lista de acertijos
+            renderRiddlesList();
+            
+            // Seleccionar el nuevo acertijo
+            selectRiddle(newRiddle.id);
+            
+            // Limpiar formulario
+            addRiddleForm.reset();
+            
+            // Restablecer selector de dificultad
+            difficultyOptions.forEach(o => o.classList.remove('selected'));
+            document.querySelector('.difficulty-option.easy').classList.add('selected');
+            document.getElementById('riddle-difficulty').value = 'easy';
+            
+            // Cerrar modal
+            addRiddleModal.style.display = 'none';
+            
+            // Mostrar mensaje de éxito
+            alert('¡Nuevo acertijo agregado con éxito! Aparecerá en la parte superior de la lista.');
+        }
+
+        // Guardar datos en localStorage
+        function saveToLocalStorage() {
+            const appState = {
+                riddlesDatabase,
+                nextRiddleId,
+                solvedRiddles: Array.from(solvedRiddles),
+                currentStreak,
+                totalCluesUsed,
+                currentRiddleId
+            };
+            localStorage.setItem('riddlesAppState', JSON.stringify(appState));
+        }
+
+        // Cargar datos desde localStorage
+        function loadFromLocalStorage() {
+            const savedState = localStorage.getItem('riddlesAppState');
+            if (savedState) {
+                try {
+                    const state = JSON.parse(savedState);
+                    riddlesDatabase = state.riddlesDatabase || riddlesDatabase;
+                    nextRiddleId = state.nextRiddleId || nextRiddleId;
+                    solvedRiddles = new Set(state.solvedRiddles || []);
+                    currentStreak = state.currentStreak || 0;
+                    totalCluesUsed = state.totalCluesUsed || 0;
+                    currentRiddleId = state.currentRiddleId || currentRiddleId;
+                } catch (e) {
+                    console.log('Error al cargar datos guardados:', e);
+                }
+            }
+        }
+
+        // Agregar animación de shake
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

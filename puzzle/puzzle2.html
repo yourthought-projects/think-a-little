@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patrón de Enfriamiento del Reactor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c2461, #1e3799);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #00d2ff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: #00d2ff;
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.7);
+            letter-spacing: 1px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: #a5b1c2;
+            max-width: 800px;
+            margin: 0 auto 15px;
+            line-height: 1.5;
+        }
+        
+        .game-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .reactor-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(10, 25, 47, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #00d2ff;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+        }
+        
+        .controls-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(10, 25, 47, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #00d2ff;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #00d2ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            font-size: 1.5rem;
+        }
+        
+        .reactor-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .reactor {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #222, #000);
+            border: 8px solid #333;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.7);
+            transition: box-shadow 0.5s;
+        }
+        
+        .reactor-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ff0000, #ff4500, #ff0000);
+            animation: pulse 2s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        }
+        
+        .temperature-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            color: #ff4757;
+            text-shadow: 0 0 10px rgba(255, 71, 87, 0.7);
+        }
+        
+        .temperature-bar {
+            width: 100%;
+            height: 25px;
+            background: #333;
+            border-radius: 12px;
+            margin: 20px 0;
+            overflow: hidden;
+            border: 2px solid #444;
+        }
+        
+        .temperature-fill {
+            height: 100%;
+            width: 70%;
+            background: linear-gradient(to right, #00d2ff, #ff4757);
+            border-radius: 10px;
+            transition: width 0.5s ease, background 0.5s;
+        }
+        
+        .status {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+        
+        .status.critical {
+            background: rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+            border: 2px solid #ff4757;
+            animation: blink 1s infinite;
+        }
+        
+        .status.warning {
+            background: rgba(255, 165, 0, 0.2);
+            color: #ffa500;
+            border: 2px solid #ffa500;
+        }
+        
+        .status.stable {
+            background: rgba(0, 210, 255, 0.2);
+            color: #00d2ff;
+            border: 2px solid #00d2ff;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .color-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+        
+        .color-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .color-btn:active {
+            transform: translateY(0);
+        }
+        
+        .color-btn.red { background: linear-gradient(145deg, #ff4757, #ff3838); }
+        .color-btn.blue { background: linear-gradient(145deg, #3742fa, #5352ed); }
+        .color-btn.green { background: linear-gradient(145deg, #2ed573, #20bf6b); }
+        .color-btn.yellow { background: linear-gradient(145deg, #ffa502, #ff7f00); }
+        .color-btn.purple { background: linear-gradient(145deg, #8a2be2, #9932cc); }
+        
+        .color-btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+        
+        .color-btn.correct {
+            animation: correctPulse 0.5s;
+        }
+        
+        .color-btn.incorrect {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .pattern-section {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            border: 1px solid #444;
+        }
+        
+        .pattern-section h3 {
+            color: #00d2ff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .pattern-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .pattern-slot {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #aaa;
+            border: 2px dashed #444;
+            transition: all 0.3s;
+        }
+        
+        .pattern-slot.filled {
+            background: rgba(0, 210, 255, 0.2);
+            border: 2px solid #00d2ff;
+            color: #fff;
+        }
+        
+        .pattern-slot.correct {
+            background: rgba(46, 213, 115, 0.3);
+            border: 2px solid #2ed573;
+        }
+        
+        .pattern-slot.incorrect {
+            background: rgba(255, 71, 87, 0.3);
+            border: 2px solid #ff4757;
+        }
+        
+        .pattern-progress {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .progress-text {
+            font-size: 1.1rem;
+            color: #a5b1c2;
+        }
+        
+        .progress-bar {
+            width: 70%;
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #00d2ff, #2ed573);
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+        
+        .info-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+        
+        .info-panel h3 {
+            color: #00d2ff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00d2ff;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: #a5b1c2;
+            margin-top: 5px;
+        }
+        
+        .instructions {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border-left: 5px solid #00d2ff;
+        }
+        
+        .instructions h3 {
+            color: #00d2ff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            color: #a5b1c2;
+        }
+        
+        .last-action {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            border: 1px solid #444;
+        }
+        
+        .action-text {
+            font-size: 1.2rem;
+            color: #00d2ff;
+        }
+        
+        .action-effect {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .control-button {
+            padding: 12px 25px;
+            background: linear-gradient(145deg, #00d2ff, #0984e3);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.3);
+        }
+        
+        .control-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 210, 255, 0.5);
+        }
+        
+        .control-button.reset {
+            background: linear-gradient(145deg, #ff4757, #ff3838);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+        }
+        
+        .control-button.reset:hover {
+            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.5);
+        }
+        
+        .game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            z-index: 100;
+        }
+        
+        .game-over h2 {
+            font-size: 3.5rem;
+            color: #ff4757;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 71, 87, 0.8);
+        }
+        
+        .game-over p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 600px;
+            color: #fff;
+        }
+        
+        .cooling-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.3), transparent 70%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .heating-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 71, 87, 0.3), transparent 70%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        
+        .difficulty-btn {
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: #a5b1c2;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .difficulty-btn.active {
+            background: rgba(0, 210, 255, 0.2);
+            color: #00d2ff;
+            border-color: #00d2ff;
+        }
+        
+        .sound-control {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            z-index: 10;
+        }
+        
+        .sound-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #444;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00d2ff;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+        
+        .sound-btn:hover {
+            background: rgba(0, 210, 255, 0.2);
+            border-color: #00d2ff;
+        }
+        
+        .sound-btn.muted {
+            color: #ff4757;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .game-area {
+                flex-direction: column;
+            }
+            
+            .color-btn {
+                width: 70px;
+                height: 70px;
+                font-size: 1.2rem;
+            }
+            
+            .temperature-display {
+                font-size: 2rem;
+            }
+            
+            .pattern-slot {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+            
+            .sound-control {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sound-control">
+            <div class="sound-btn" id="sound-btn" title="Activar/Desactivar sonido">
+                <i class="fas fa-volume-up"></i>
+            </div>
+        </div>
+        
+        <div class="header">
+            <h1><i class="fas fa-atom"></i> Patrón de Enfriamiento del Reactor</h1>
+            <p>El reactor nuclear está en estado crítico. Debes completar secuencias de colores en el orden correcto para enfriarlo. Cada error en la secuencia sobrecargará el reactor. ¡Encuentra el patrón correcto antes de que sea demasiado tarde!</p>
+            
+            <div class="difficulty-selector">
+                <div class="difficulty-btn active" data-difficulty="normal">Normal (4 colores)</div>
+                <div class="difficulty-btn" data-difficulty="hard">Difícil (5 colores)</div>
+                <div class="difficulty-btn" data-difficulty="extreme">Extremo (6 colores)</div>
+            </div>
+        </div>
+        
+        <div class="game-area">
+            <div class="reactor-section">
+                <h2 class="section-title"><i class="fas fa-radiation-alt"></i> Estado del Reactor</h2>
+                
+                <div class="reactor-container">
+                    <div class="reactor" id="reactor">
+                        <div class="reactor-core" id="reactor-core"></div>
+                    </div>
+                    
+                    <div class="temperature-display" id="temperature">850°C</div>
+                    
+                    <div class="temperature-bar">
+                        <div class="temperature-fill" id="temperature-fill"></div>
+                    </div>
+                    
+                    <div class="status critical" id="status">¡ESTADO CRÍTICO!</div>
+                </div>
+                
+                <div class="pattern-section">
+                    <h3><i class="fas fa-list-ol"></i> Secuencia Actual</h3>
+                    <div class="pattern-display" id="pattern-display">
+                        <!-- Los slots se generarán dinámicamente -->
+                    </div>
+                    <div class="pattern-progress">
+                        <div class="progress-text">Progreso: <span id="progress-text">0/4</span></div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-panel">
+                    <h3><i class="fas fa-chart-line"></i> Estadísticas</h3>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value" id="moves">0</div>
+                            <div class="stat-label">Movimientos</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="sequences-completed">0</div>
+                            <div class="stat-label">Secuencias</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="errors">0</div>
+                            <div class="stat-label">Errores</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls-section">
+                <h2 class="section-title"><i class="fas fa-gamepad"></i> Controles de Enfriamiento</h2>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-info-circle"></i> Instrucciones</h3>
+                    <ul>
+                        <li>Debes completar secuencias de <strong id="seq-length">4</strong> colores en el orden correcto</li>
+                        <li>Cada secuencia correcta enfriará el reactor entre <strong>30-50°C</strong></li>
+                        <li>Cada error en la secuencia sobrecargará el reactor entre <strong>20-40°C</strong></li>
+                        <li>El objetivo es bajar la temperatura a menos de <strong>300°C</strong></li>
+                        <li>Si la temperatura supera los <strong>1000°C</strong>, el reactor explotará</li>
+                        <li>¡La secuencia cambia después de cada intento!</li>
+                    </ul>
+                </div>
+                
+                <div class="controls">
+                    <button class="color-btn red" data-color="red"><i class="fas fa-fire"></i></button>
+                    <button class="color-btn blue" data-color="blue"><i class="fas fa-snowflake"></i></button>
+                    <button class="color-btn green" data-color="green"><i class="fas fa-leaf"></i></button>
+                    <button class="color-btn yellow" data-color="yellow"><i class="fas fa-bolt"></i></button>
+                    <button class="color-btn purple" data-color="purple"><i class="fas fa-magic"></i></button>
+                </div>
+                
+                <div class="last-action" id="last-action">
+                    <div class="action-text">Última acción:</div>
+                    <div class="action-effect" id="action-effect">Esperando secuencia...</div>
+                </div>
+                
+                <div class="buttons">
+                    <button class="control-button" id="show-sequence-btn">
+                        <i class="fas fa-eye"></i> Ver secuencia
+                    </button>
+                    <button class="control-button reset" id="reset-btn">
+                        <i class="fas fa-redo"></i> Reiniciar
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cooling-effect" id="cooling-effect"></div>
+        <div class="heating-effect" id="heating-effect"></div>
+        
+        <div class="game-over" id="game-over">
+            <h2 id="game-over-title">¡Reactor Estable!</h2>
+            <p id="game-over-message">Has logrado enfriar el reactor a un estado seguro.</p>
+            <button class="control-button" id="restart-btn">
+                <i class="fas fa-play"></i> Jugar de nuevo
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Variables del juego
+        let temperature = 850;
+        let currentSequence = [];
+        let playerSequence = [];
+        let moves = 0;
+        let sequencesCompleted = 0;
+        let errors = 0;
+        let gameActive = true;
+        let currentDifficulty = "normal";
+        let sequenceLength = 4;
+        let maxTemperature = 1000;
+        let soundEnabled = true;
+        
+        // Configuraciones por dificultad
+        const difficultySettings = {
+            normal: {
+                coolingEffect: { min: -30, max: -50 },
+                heatingEffect: { min: 20, max: 40 },
+                sequenceLength: 4
+            },
+            hard: {
+                coolingEffect: { min: -25, max: -40 },
+                heatingEffect: { min: 25, max: 45 },
+                sequenceLength: 5
+            },
+            extreme: {
+                coolingEffect: { min: -20, max: -35 },
+                heatingEffect: { min: 30, max: 50 },
+                sequenceLength: 6
+            }
+        };
+        
+        // Elementos del DOM
+        const temperatureElement = document.getElementById('temperature');
+        const temperatureFillElement = document.getElementById('temperature-fill');
+        const statusElement = document.getElementById('status');
+        const reactorElement = document.getElementById('reactor');
+        const reactorCoreElement = document.getElementById('reactor-core');
+        const movesElement = document.getElementById('moves');
+        const sequencesCompletedElement = document.getElementById('sequences-completed');
+        const errorsElement = document.getElementById('errors');
+        const lastActionElement = document.getElementById('last-action');
+        const actionEffectElement = document.getElementById('action-effect');
+        const colorButtons = document.querySelectorAll('.color-btn');
+        const showSequenceButton = document.getElementById('show-sequence-btn');
+        const resetButton = document.getElementById('reset-btn');
+        const restartButton = document.getElementById('restart-btn');
+        const gameOverElement = document.getElementById('game-over');
+        const gameOverTitleElement = document.getElementById('game-over-title');
+        const gameOverMessageElement = document.getElementById('game-over-message');
+        const coolingEffectElement = document.getElementById('cooling-effect');
+        const heatingEffectElement = document.getElementById('heating-effect');
+        const patternDisplayElement = document.getElementById('pattern-display');
+        const progressTextElement = document.getElementById('progress-text');
+        const progressFillElement = document.getElementById('progress-fill');
+        const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+        const soundButton = document.getElementById('sound-btn');
+        const seqLengthElement = document.getElementById('seq-length');
+        
+        // Sistema de sonido
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Funciones para generar sonidos
+        function playClickSound() {
+            if (!soundEnabled) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+        
+        function playCorrectSound() {
+            if (!soundEnabled) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 1200;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+            
+            // Segundo tono más bajo
+            setTimeout(() => {
+                const oscillator2 = audioContext.createOscillator();
+                const gainNode2 = audioContext.createGain();
+                
+                oscillator2.connect(gainNode2);
+                gainNode2.connect(audioContext.destination);
+                
+                oscillator2.frequency.value = 1000;
+                oscillator2.type = 'sine';
+                
+                gainNode2.gain.setValueAtTime(0.15, audioContext.currentTime);
+                gainNode2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                
+                oscillator2.start(audioContext.currentTime);
+                oscillator2.stop(audioContext.currentTime + 0.2);
+            }, 100);
+        }
+        
+        function playIncorrectSound() {
+            if (!soundEnabled) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 300;
+            oscillator.type = 'sawtooth';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+        
+        function playCoolingSound() {
+            if (!soundEnabled) return;
+            
+            // Sonido de enfriamiento (tonos descendentes)
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 800 - (i * 100);
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.2);
+                }, i * 100);
+            }
+        }
+        
+        function playHeatingSound() {
+            if (!soundEnabled) return;
+            
+            // Sonido de calentamiento (tonos ascendentes)
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 400 + (i * 100);
+                    oscillator.type = 'sawtooth';
+                    
+                    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.25);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.25);
+                }, i * 100);
+            }
+        }
+        
+        function playExplosionSound() {
+            if (!soundEnabled) return;
+            
+            // Sonido de explosión (ruido)
+            const bufferSize = audioContext.sampleRate * 2;
+            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+            const output = buffer.getChannelData(0);
+            
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+            
+            const noise = audioContext.createBufferSource();
+            noise.buffer = buffer;
+            
+            const gainNode = audioContext.createGain();
+            gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+            
+            noise.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            noise.start(audioContext.currentTime);
+            noise.stop(audioContext.currentTime + 1);
+        }
+        
+        function playSequenceSound() {
+            if (!soundEnabled) return;
+            
+            // Sonido para mostrar secuencia (tonos suaves)
+            for (let i = 0; i < sequenceLength+1; i++) {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 100 + (i * 50);
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                }, i * 400);
+            }
+        }
+        
+        // Generar una secuencia aleatoria
+        function generateSequence() {
+            currentSequence = [];
+            const colors = ['red', 'blue', 'green', 'yellow', 'purple'];
+            
+            // Limpiar slots de patrón
+            patternDisplayElement.innerHTML = '';
+            
+            // Crear slots según la longitud de secuencia
+            for (let i = 0; i < sequenceLength; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'pattern-slot';
+                slot.id = `slot${i+1}`;
+                slot.textContent = '?';
+                patternDisplayElement.appendChild(slot);
+            }
+            
+            // Generar nueva secuencia
+            for (let i = 0; i < sequenceLength; i++) {
+                const randomIndex = Math.floor(Math.random() * colors.length);
+                currentSequence.push(colors[randomIndex]);
+            }
+            
+            // Actualizar progreso
+            updateProgress();
+            
+            // Actualizar texto de longitud de secuencia en instrucciones
+            seqLengthElement.textContent = sequenceLength;
+            
+            console.log("Nueva secuencia generada:", currentSequence); // Para depuración
+        }
+        
+        // Actualizar el progreso de la secuencia actual
+        function updateProgress() {
+            const progress = playerSequence.length;
+            const progressPercentage = (progress / sequenceLength) * 100;
+            
+            progressTextElement.textContent = `${progress}/${sequenceLength}`;
+            progressFillElement.style.width = `${progressPercentage}%`;
+            
+            // Actualizar slots de patrón
+            for (let i = 0; i < sequenceLength; i++) {
+                const slot = document.getElementById(`slot${i+1}`);
+                if (!slot) continue;
+                
+                if (i < progress) {
+                    slot.className = 'pattern-slot filled';
+                    slot.textContent = i + 1;
+                } else {
+                    slot.className = 'pattern-slot';
+                    slot.textContent = '?';
+                }
+            }
+        }
+        
+        // Mostrar la secuencia actual al jugador
+        function showSequence() {
+            if (!gameActive) return;
+            
+            // Aumentar temperatura por usar pista
+            temperature += 15;
+            
+            // Mostrar efecto de calentamiento
+            heatingEffectElement.style.opacity = '0.7';
+            setTimeout(() => {
+                heatingEffectElement.style.opacity = '0';
+            }, 500);
+            
+            // Reproducir sonido de secuencia
+            playSequenceSound();
+            
+            // Mostrar secuencia en los slots
+            for (let i = 0; i < sequenceLength; i++) {
+                setTimeout(() => {
+                    const slot = document.getElementById(`slot${i+1}`);
+                    if (!slot) return;
+                    
+                    slot.className = 'pattern-slot filled';
+                    slot.textContent = i + 1;
+                    slot.style.backgroundColor = getColorHex(currentSequence[i]);
+                    
+                    // Restaurar después de 1 segundo
+                    setTimeout(() => {
+                        if (i < playerSequence.length) {
+                            slot.className = 'pattern-slot filled';
+                            slot.textContent = i + 1;
+                            slot.style.backgroundColor = '';
+                        } else {
+                            slot.className = 'pattern-slot';
+                            slot.textContent = '?';
+                            slot.style.backgroundColor = '';
+                        }
+                    }, 1000);
+                }, i * 600);
+            }
+            
+            // Mostrar mensaje
+            actionEffectElement.textContent = "Secuencia revelada (+15°C)";
+            actionEffectElement.style.color = '#ffa500';
+            lastActionElement.style.borderColor = '#ffa500';
+            
+            // Reproducir sonido de calentamiento
+            playHeatingSound();
+            
+            updateReactor();
+        }
+        
+        // Obtener código hexadecimal de color
+        function getColorHex(colorName) {
+            const colorMap = {
+                'red': '#ff4757',
+                'blue': '#3742fa',
+                'green': '#2ed573',
+                'yellow': '#ffa502',
+                'purple': '#8a2be2'
+            };
+            return colorMap[colorName] || '#ffffff';
+        }
+        
+        // Procesar clic en botón de color
+        function processColorClick(color) {
+            if (!gameActive) return;
+            
+            moves++;
+            
+            // Reproducir sonido de clic
+            playClickSound();
+            
+            // Agregar color a la secuencia del jugador
+            playerSequence.push(color);
+            
+            // Verificar si es correcto
+            const currentIndex = playerSequence.length - 1;
+            const isCorrect = playerSequence[currentIndex] === currentSequence[currentIndex];
+            
+            // Actualizar slot correspondiente
+            if (currentIndex < sequenceLength) {
+                const slot = document.getElementById(`slot${currentIndex + 1}`);
+                if (slot) {
+                    if (isCorrect) {
+                        slot.className = 'pattern-slot correct';
+                        slot.textContent = currentIndex + 1;
+                    } else {
+                        slot.className = 'pattern-slot incorrect';
+                        slot.textContent = 'X';
+                    }
+                }
+            }
+            
+            // Verificar si la secuencia está completa
+            if (playerSequence.length === sequenceLength) {
+                // Verificar si toda la secuencia es correcta
+                const isSequenceComplete = playerSequence.every((color, index) => color === currentSequence[index]);
+                
+                if (isSequenceComplete) {
+                    // Secuencia correcta - enfriar reactor
+                    sequencesCompleted++;
+                    const settings = difficultySettings[currentDifficulty];
+                    const coolingEffect = Math.floor(Math.random() * (settings.coolingEffect.max - settings.coolingEffect.min + 1)) + settings.coolingEffect.min;
+                    
+                    temperature += coolingEffect;
+                    
+                    // Mostrar efecto de enfriamiento
+                    coolingEffectElement.style.opacity = '0.7';
+                    setTimeout(() => {
+                        coolingEffectElement.style.opacity = '0';
+                    }, 500);
+                    
+                    // Reproducir sonidos
+                    playCorrectSound();
+                    playCoolingSound();
+                    
+                    // Mostrar mensaje
+                    actionEffectElement.textContent = `¡Secuencia correcta! Enfriamiento: ${Math.abs(coolingEffect)}°C`;
+                    actionEffectElement.style.color = '#00d2ff';
+                    lastActionElement.style.borderColor = '#00d2ff';
+                    
+                    // Efecto visual en botones
+                    playerSequence.forEach((color, index) => {
+                        setTimeout(() => {
+                            const btn = document.querySelector(`.color-btn.${color}`);
+                            btn.classList.add('correct');
+                            setTimeout(() => btn.classList.remove('correct'), 500);
+                        }, index * 200);
+                    });
+                } else {
+                    // Secuencia incorrecta - sobrecargar reactor
+                    errors++;
+                    const settings = difficultySettings[currentDifficulty];
+                    const heatingEffect = Math.floor(Math.random() * (settings.heatingEffect.max - settings.heatingEffect.min + 1)) + settings.heatingEffect.min;
+                    
+                    temperature += heatingEffect;
+                    
+                    // Mostrar efecto de calentamiento
+                    heatingEffectElement.style.opacity = '0.7';
+                    setTimeout(() => {
+                        heatingEffectElement.style.opacity = '0';
+                    }, 500);
+                    
+                    // Reproducir sonidos
+                    playIncorrectSound();
+                    playHeatingSound();
+                    
+                    // Mostrar mensaje
+                    actionEffectElement.textContent = `¡Secuencia incorrecta! Sobrecarga: +${heatingEffect}°C`;
+                    actionEffectElement.style.color = '#ff4757';
+                    lastActionElement.style.borderColor = '#ff4757';
+                    
+                    // Efecto visual en botones
+                    playerSequence.forEach((color, index) => {
+                        setTimeout(() => {
+                            const btn = document.querySelector(`.color-btn.${color}`);
+                            btn.classList.add('incorrect');
+                            setTimeout(() => btn.classList.remove('incorrect'), 500);
+                        }, index * 200);
+                    });
+                }
+                
+                // Generar nueva secuencia y reiniciar la del jugador
+                setTimeout(() => {
+                    playerSequence = [];
+                    generateSequence();
+                    updateReactor();
+                }, 1000);
+            } else {
+                // Aún no se completa la secuencia
+                if (isCorrect) {
+                    actionEffectElement.textContent = `Paso ${playerSequence.length} correcto`;
+                    actionEffectElement.style.color = '#00d2ff';
+                    playCorrectSound();
+                } else {
+                    actionEffectElement.textContent = `Paso ${playerSequence.length} incorrecto`;
+                    actionEffectElement.style.color = '#ff4757';
+                    
+                    // Error en medio de la secuencia - sobrecargar reactor
+                    errors++;
+                    const heatingEffect = 10;
+                    temperature += heatingEffect;
+                    
+                    // Reproducir sonidos
+                    playIncorrectSound();
+                    playHeatingSound();
+                    
+                    // Mostrar efecto de calentamiento
+                    heatingEffectElement.style.opacity = '0.5';
+                    setTimeout(() => {
+                        heatingEffectElement.style.opacity = '0';
+                    }, 500);
+                    
+                    // Generar nueva secuencia y reiniciar la del jugador
+                    setTimeout(() => {
+                        playerSequence = [];
+                        generateSequence();
+                        updateReactor();
+                    }, 1000);
+                }
+            }
+            
+            // Actualizar progreso
+            updateProgress();
+            
+            // Actualizar reactor
+            updateReactor();
+        }
+        
+        // Actualizar la visualización del reactor
+        function updateReactor() {
+            // Asegurar que la temperatura esté dentro de límites
+            temperature = Math.max(0, Math.min(temperature, 1200));
+            
+            // Actualizar temperatura
+            temperatureElement.textContent = `${temperature}°C`;
+            
+            // Actualizar barra de temperatura (0-1000°C)
+            const fillPercentage = Math.min(Math.max(temperature / 10, 0), 100);
+            temperatureFillElement.style.width = `${fillPercentage}%`;
+            
+            // Cambiar color de la barra según temperatura
+            if (temperature < 300) {
+                temperatureFillElement.style.background = 'linear-gradient(to right, #00d2ff, #00ffaa)';
+            } else if (temperature < 600) {
+                temperatureFillElement.style.background = 'linear-gradient(to right, #00d2ff, #ffa500)';
+            } else {
+                temperatureFillElement.style.background = 'linear-gradient(to right, #00d2ff, #ff4757)';
+            }
+            
+            // Actualizar estado del reactor
+            let statusText, statusClass;
+            if (temperature < 300) {
+                statusText = "REACTOR ESTABLE";
+                statusClass = "stable";
+                reactorElement.style.boxShadow = '0 0 40px rgba(0, 210, 255, 0.7)';
+                reactorCoreElement.style.background = 'radial-gradient(circle, #00d2ff, #0984e3, #00d2ff)';
+            } else if (temperature < 700) {
+                statusText = "ADVERTENCIA: TEMPERATURA ALTA";
+                statusClass = "warning";
+                reactorElement.style.boxShadow = '0 0 40px rgba(255, 165, 0, 0.7)';
+                reactorCoreElement.style.background = 'radial-gradient(circle, #ffa500, #ff7f00, #ffa500)';
+            } else {
+                statusText = "¡ESTADO CRÍTICO!";
+                statusClass = "critical";
+                reactorElement.style.boxShadow = '0 0 40px rgba(255, 71, 87, 0.7)';
+                reactorCoreElement.style.background = 'radial-gradient(circle, #ff0000, #ff4500, #ff0000)';
+            }
+            
+            statusElement.textContent = statusText;
+            statusElement.className = `status ${statusClass}`;
+            
+            // Actualizar estadísticas
+            movesElement.textContent = moves;
+            sequencesCompletedElement.textContent = sequencesCompleted;
+            errorsElement.textContent = errors;
+            
+            // Verificar condiciones de fin de juego
+            checkGameEnd();
+        }
+        
+        // Verificar si el juego ha terminado
+        function checkGameEnd() {
+            if (temperature >= maxTemperature) {
+                // Explosión del reactor
+                gameOverTitleElement.textContent = "¡FUSIÓN NUCLEAR!";
+                gameOverMessageElement.textContent = `El reactor ha superado los ${maxTemperature}°C y ha explotado. Completaste ${sequencesCompleted} secuencias con ${errors} errores.`;
+                gameOverElement.style.display = 'flex';
+                gameActive = false;
+                
+                // Reproducir sonido de explosión
+                playExplosionSound();
+                
+                // Efecto visual de explosión
+                reactorElement.style.boxShadow = '0 0 100px rgba(255, 0, 0, 1)';
+                reactorCoreElement.style.background = 'radial-gradient(circle, #ff0000, #ff4500, #ff0000, #ff0000)';
+                reactorCoreElement.style.animation = 'none';
+                reactorCoreElement.style.transform = 'translate(-50%, -50%) scale(2)';
+                reactorCoreElement.style.opacity = '0.8';
+                
+            } else if (temperature <= 200) {
+                // Reactor estabilizado
+                gameOverTitleElement.textContent = "¡REACTOR ESTABILIZADO!";
+                gameOverMessageElement.textContent = `Has enfriado el reactor a ${temperature}°C. Completaste ${sequencesCompleted} secuencias con ${errors} errores.`;
+                gameOverElement.style.display = 'flex';
+                gameActive = false;
+                
+                // Reproducir sonido de victoria
+                playCorrectSound();
+                
+                // Efecto visual de estabilización
+                reactorElement.style.boxShadow = '0 0 60px rgba(0, 210, 255, 1)';
+                reactorCoreElement.style.background = 'radial-gradient(circle, #00d2ff, #0984e3, #00d2ff)';
+            }
+        }
+        
+        // Cambiar dificultad
+        function changeDifficulty(difficulty) {
+            currentDifficulty = difficulty;
+            sequenceLength = difficultySettings[difficulty].sequenceLength;
+            
+            // Actualizar botones de dificultad
+            difficultyButtons.forEach(btn => {
+                if (btn.dataset.difficulty === difficulty) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Reiniciar juego con nueva dificultad
+            resetGame();
+        }
+        
+        // Reiniciar el juego
+        function resetGame() {
+            temperature = 850;
+            moves = 0;
+            sequencesCompleted = 0;
+            errors = 0;
+            gameActive = true;
+            playerSequence = [];
+            
+            // Restaurar efectos visuales del reactor
+            reactorCoreElement.style.animation = 'pulse 2s infinite alternate';
+            reactorCoreElement.style.transform = 'translate(-50%, -50%) scale(1)';
+            reactorCoreElement.style.opacity = '1';
+            
+            // Ocultar pantalla de fin de juego
+            gameOverElement.style.display = 'none';
+            
+            // Restablecer última acción
+            actionEffectElement.textContent = 'Esperando secuencia...';
+            actionEffectElement.style.color = '#00d2ff';
+            lastActionElement.style.borderColor = '#444';
+            
+            // Generar nueva secuencia
+            generateSequence();
+            
+            // Actualizar reactor
+            updateReactor();
+        }
+        
+        // Alternar sonido
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            
+            if (soundEnabled) {
+                soundButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+                soundButton.classList.remove('muted');
+                soundButton.title = "Desactivar sonido";
+            } else {
+                soundButton.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                soundButton.classList.add('muted');
+                soundButton.title = "Activar sonido";
+            }
+        }
+        
+        // Inicializar el juego
+        function initGame() {
+            // Configurar event listeners para los botones de color
+            colorButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (!gameActive) return;
+                    const color = button.classList[1]; // Obtener la clase de color (red, blue, etc.)
+                    processColorClick(color);
+                });
+            });
+            
+            // Configurar event listeners para los botones de control
+            showSequenceButton.addEventListener('click', showSequence);
+            resetButton.addEventListener('click', resetGame);
+            restartButton.addEventListener('click', resetGame);
+            
+            // Configurar event listeners para los botones de dificultad
+            difficultyButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    changeDifficulty(button.dataset.difficulty);
+                });
+            });
+            
+            // Configurar event listener para el botón de sonido
+            soundButton.addEventListener('click', toggleSound);
+            
+            // Generar primera secuencia y actualizar reactor
+            generateSequence();
+            updateReactor();
+        }
+        
+        // Iniciar el juego cuando se carga la página
+        document.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
