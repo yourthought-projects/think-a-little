@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso #008: El Esposo Telepático</title>
+    <style>
+        /* Estilos visuales con tema "Índigo / Policial / Noche" */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #050510; /* Azul noche muy oscuro */
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .caso-card {
+            background-color: #0f0f20;
+            border: 1px solid #2a2a50;
+            padding: 30px;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 25px rgba(98, 0, 234, 0.2);
+            position: relative;
+        }
+
+        /* Etiqueta de Nivel */
+        .badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background-color: #6200ea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            font-family: sans-serif;
+        }
+
+        h1 { 
+            color: #7c4dff; /* Índigo Brillante */
+            text-align: center; 
+            border-bottom: 2px solid #2a2a50; 
+            padding-bottom: 10px; 
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        h3 { color: #6200ea; margin-top: 25px; }
+        
+        .pista-box {
+            background-color: #15152b;
+            padding: 15px;
+            border-left: 4px solid #7c4dff;
+            margin: 20px 0;
+            font-style: italic;
+            line-height: 1.5;
+            color: #b0b0d0;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 12px;
+            font-size: 16px;
+            background: #1e1e38;
+            border: 1px solid #7c4dff;
+            color: white;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #6200ea;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        button:hover { background-color: #7c4dff; }
+
+        #resultado {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .win { background-color: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; }
+        .fail { background-color: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+
+        .volver-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #777;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .volver-link:hover { color: #7c4dff; }
+
+    </style>
+</head>
+<body>
+
+    <div class="caso-card">
+        <div class="badge">NIVEL: INTELIGENCIA POLICIAL</div>
+        <h1>EXPEDIENTE #008</h1>
+        <p><strong>Víctima:</strong> Una mujer joven.</p>
+        <p><strong>Lugar:</strong> Habitación 302 del Hotel "Grand Central".</p>
+        
+        <p>La mujer fue encontrada asesinada. El detective tomó el celular de la víctima, buscó el contacto "Esposo" y llamó.</p>
+
+        <div class="pista-box">
+            <ul>
+                <li><strong>El Detective dijo:</strong> "Señor, tengo malas noticias. Su esposa ha sido asesinada. Por favor, venga a la escena del crimen de inmediato".</li>
+                <li><strong>El Esposo respondió:</strong> "¡Dios mío! ¡Voy para allá ahora mismo!" y colgó.</li>
+                <li>El esposo llegó al hotel en 20 minutos.</li>
+                <li>En cuanto se bajó del coche, la policía lo arrestó por el asesinato.</li>
+            </ul>
+        </div>
+
+        <h3>¿Por qué supieron que él era culpable?</h3>
+        <p>Analiza la llamada telefónica. ¿Qué error fatal cometió el esposo?</p>
+        
+        <div style="text-align: center;">
+            <input type="text" id="respuestaUsuario" placeholder="El policía no le dijo...">
+            <button onclick="verificarRespuesta()">INTERROGAR</button>
+        </div>
+
+        <div id="resultado"></div>
+
+        <a href="misterios.html" class="volver-link">← Volver al Archivo de Casos</a>
+    </div>
+
+    <script>
+        function verificarRespuesta() {
+            let respuesta = document.getElementById("respuestaUsuario").value;
+            respuesta = respuesta.toLowerCase().trim();
+            let mensaje = document.getElementById("resultado");
+
+            // Palabras clave: Dirección, lugar, donde, ubicación, hotel
+            if (respuesta.includes("direccion") || respuesta.includes("dirección") || respuesta.includes("donde") || respuesta.includes("lugar") || respuesta.includes("ubicacion") || respuesta.includes("ubicación") || respuesta.includes("hotel")) {
+                mensaje.innerHTML = "¡CULPABLE! 📱👮‍♂️ <br> El detective le dijo 'venga a la escena del crimen', pero nunca le dijo <strong>DÓNDE</strong> era ni en qué hotel. Él ya lo sabía porque él la mató.";
+                mensaje.className = "win";
+            } else if (respuesta === "") {
+                mensaje.innerHTML = "Tu silencio es tan sospechoso como el del esposo.";
+                mensaje.className = "";
+            } else if (respuesta.includes("tiempo") || respuesta.includes("rapido") || respuesta.includes("minutos")) {
+                mensaje.innerHTML = "Llegar rápido no es delito. Quizás estaba cerca. El error está en CÓMO llegó.";
+                mensaje.className = "fail";
+            } else if (respuesta.includes("pregunto") || respuesta.includes("preguntó")) {
+                mensaje.innerHTML = "Vas muy bien... ¿Qué fue lo que NO preguntó?";
+                mensaje.className = "fail";
+            } else {
+                mensaje.innerHTML = "INCORRECTO. Escucha la llamada de nuevo. ¿Cómo sabías tú que tenías que ir al Hotel Grand Central?";
+                mensaje.className = "fail";
+            }
+        }
+    </script>
+
+</body>
+</html>
