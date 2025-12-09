@@ -1,0 +1,25 @@
+***
+
+### Cómo guardar esto en tu PC (Ubuntu):
+
+1.  Abre tu terminal en la carpeta de tu proyecto.
+2.  Crea el archivo:
+    ```bash
+    nano manual_git.md
+    ```
+3.  Copia el texto de arriba y pégalo (Click derecho -> Pegar).
+4.  Guarda (`Ctrl + O`, `Enter`) y Sal (`Ctrl + X`).
+
+### Tarea práctica para ti y tu hijo:
+
+Para probar esto sin miedo a romper nada, hagan este ejercicio juntos ahora:
+
+1.  **Hijo:** Crea un archivo llamado `error.txt` con el texto "Esto es un error".
+2.  **Hijo:** Haz `add`, `commit` y `push`.
+3.  **Papá:** Haz `git pull` para recibir el error.
+4.  **Papá:** Usa `git log --oneline` para ver el ID de ese commit.
+5.  **Papá:** Usa `git revert ID_DEL_COMMIT` para deshacerlo "profesionalmente".
+6.  **Papá:** Haz `git push`.
+7.  **Hijo:** Haz `git pull` y observa cómo el archivo desaparece (o se vacía) limpiamente.
+
+¿Te animas a probarlo?
