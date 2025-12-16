@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso #010: La Bóveda Central</title>
+    <style>
+        /* --- Estética General (Bóveda / Oro / Seguridad) --- */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #0a0a0a;
+            color: #d4af37;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .caso-card {
+            background-color: #1a1a1a;
+            border: 2px solid #555;
+            padding: 30px;
+            max-width: 500px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
+            position: relative;
+            text-align: center;
+            z-index: 1;
+        }
+
+        /* Pantalla del panel */
+        #display {
+            background: #000;
+            border: 2px inset #333;
+            color: #d4af37;
+            font-size: 2.5rem;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: 10px;
+            font-family: monospace;
+            min-height: 40px;
+            border-radius: 5px;
+            text-shadow: 0 0 5px #d4af37;
+        }
+
+        /* Grilla del teclado */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #2a2a2a;
+            color: #e0e0e0;
+            border: 1px solid #444;
+            padding: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 #111;
+        }
+
+        button:active { transform: translateY(4px); box-shadow: 0 0 0 #111; }
+        button:hover { background-color: #333; border-color: #d4af37; }
+
+        .action-btn { background: #3e2723; }
+        .enter-btn { background: #1b3a1b; }
+
+        .message { font-size: 0.9rem; margin-top: 15px; min-height: 1.2em; }
+
+        /* Estado Bloqueado */
+        .bloqueado { border-color: red !important; box-shadow: 0 0 50px red !important; }
+        .bloqueado #display { color: red; text-shadow: 0 0 10px red; border-color: red; }
+        .bloqueado button { opacity: 0.3; pointer-events: none; }
+
+        .volver-link { display: block; margin-top: 25px; color: #666; text-decoration: none; font-size: 0.9rem; }
+        .volver-link:hover { color: #d4af37; }
+
+        /* --- NUEVO: MODAL DE RECOMPENSAS --- */
+        #modalRecompensa {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .dossier-contenido {
+            background: #111;
+            border: 1px solid #d4af37;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
+            animation: slideUp 0.5s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .dossier-header {
+            border-bottom: 1px dashed #d4af37;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .files-list { list-style: none; padding: 0; }
+        .files-list li {
+            background: #222;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-left: 3px solid #d4af37;
+            display: flex;
+            justify-content: space-between;
+        }
+        .files-list a { color: #00e5ff; text-decoration: none; }
+        .files-list a:hover { text-decoration: underline; }
+
+        .reward-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border: 1px solid #444;
+            margin-top: 20px;
+            filter: sepia(0.5);
+        }
+
+        .close-modal {
+            background: transparent;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            padding: 5px 15px;
+            cursor: pointer;
+        }
+        .close-modal:hover { background: #d4af37; color: black; }
+
+        @keyframes slideUp { from {transform: translateY(50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
+
+    </style>
+</head>
+<body>
+
+    <div class="caso-card" id="panelSeguridad">
+        <h2 style="color: #fff; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px;">Bóveda Central Vane</h2>
+        
+        <p style="font-size: 0.8rem; color: #888;">
+            <span style="color: #e74c3c;">⚠ SISTEMA ACTIVO</span><br>
+            Introduce código de acceso. Intentos fallidos activan bloqueo.
+        </p>
+
+        <div id="display">----</div>
+        
+        <div class="grid">
+            <button onclick="addInput('7')">7</button>
+            <button onclick="addInput('8')">8</button>
+            <button onclick="addInput('9')">9</button>
+            <button onclick="addInput('4')">4</button>
+            <button onclick="addInput('5')">5</button>
+            <button onclick="addInput('6')">6</button>
+            <button onclick="addInput('1')">1</button>
+            <button onclick="addInput('2')">2</button>
+            <button onclick="addInput('3')">3</button>
+            <button class="action-btn" onclick="clearInput()">C</button>
+            <button onclick="addInput('0')">0</button>
+            <button class="enter-btn" onclick="checkCode()">⏎</button>
+        </div>
+        
+        <p class="message" id="msgStatus">Esperando entrada...</p>
+
+        <a href="../index.html" class="volver-link">← Salir del Sistema</a>
+    </div>
+
+    <div id="modalRecompensa">
+        <div class="dossier-contenido">
+            <div class="dossier-header">
+                <h3 id="rewardTitle" style="margin:0; color:#d4af37">ACCESO CONCEDIDO</h3>
+                <button class="close-modal" onclick="cerrarModal()">X</button>
+            </div>
+            
+            <p id="rewardMsg" style="color: #ccc; font-style: italic;">Bienvenido...</p>
+
+            <ul class="files-list" id="filesContainer">
+                </ul>
+
+            <div style="text-align: center;">
+                <p style="font-size: 0.8rem; color: #888; margin-top:20px;">RECOMPENSA VISUAL: <br> <p>Abrela en nueva pestaña y descargala</p></p>
+                <img id="rewardImg" src="" class="reward-image" alt="Premio">
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- BASE DE DATOS DE SECRETOS ---
+        // AQUÍ AGREGAS TUS CÓDIGOS NUEVOS
+        const bovedaSecrets = {
+            "9546": {
+                title: "NIVEL 1: LA INICIACIÓN",
+                msg: "Felicidades, Detective. Has encontrado la primera llave. Pero ten cuidado, hay más secretos ocultos en el código fuente de Think a Little. Busca el 'ORIGEN'.",
+                img: "../images/premio-medalla.png", // Asegúrate de tener esta imagen o usa una URL
+                files: [
+                    { name: "Bitácora_Vane.txt", link: "../text/Bitácora_Vane.txt" },
+                    { name: "Pista_Caso_11.dat", link: "../text/Pista_Caso_11.dat" },
+                    { name: "Audio_Extraño.mp3", link: "#" }
+                ]
+            },
+            "1934": {
+                title: "NIVEL 2: ARCHIVOS PERDIDOS",
+                msg: "Este código es antiguo... no debería funcionar, pero lo hace. Has abierto una brecha en el tiempo.",
+                img: "../images/premio-mapa.png", // Otra imagen
+                files: [
+                    { name: "Mapa_Viejo.jpg", link: "#" },
+                    { name: "Coordenadas.txt", link: "#" }
+                ]
+            }
+            // Agrega más códigos aquí siguiendo el formato...
+        };
+
+        // --- LÓGICA DEL PANEL ---
+        let currentInput = "";
+        let intentos = 0;
+        const maxIntentos = 2;
+        
+        const display = document.getElementById('display');
+        const message = document.getElementById('msgStatus');
+        const panel = document.getElementById('panelSeguridad');
+        const modal = document.getElementById('modalRecompensa');
+
+        // Elementos del Modal
+        const rTitle = document.getElementById('rewardTitle');
+        const rMsg = document.getElementById('rewardMsg');
+        const rImg = document.getElementById('rewardImg');
+        const rFiles = document.getElementById('filesContainer');
+
+        function addInput(num) {
+            if (currentInput.length < 4) {
+                currentInput += num;
+                updateDisplay();
+            }
+        }
+
+        function clearInput() {
+            currentInput = "";
+            updateDisplay();
+            message.innerText = "Entrada borrada.";
+            message.style.color = "#888";
+        }
+
+        function updateDisplay() {
+            display.innerText = currentInput.padEnd(4, '-').replace(/\d/g, '•');
+        }
+
+        function checkCode() {
+            if (currentInput.length === 0) return;
+
+            // 1. VERIFICAR SI ES UN CÓDIGO ESPECIAL (PRIORIDAD)
+            if (bovedaSecrets.hasOwnProperty(currentInput)) {
+                abrirRecompensa(bovedaSecrets[currentInput]);
+                resetSuccess();
+                return;
+            }
+
+            // Calculamos la suma para la validación genérica
+            const inputSum = currentInput.split('').reduce((a, b) => parseInt(a) + parseInt(b), 0);
+
+            // 2. VERIFICAR SUMA 24 (GENÉRICO / DECOY)
+            if (inputSum === 24) {
+                display.style.color = "#0f0";
+                message.innerHTML = "ACCESO GENÉRICO.<br>Bóveda vacía. Se requieren códigos específicos.";
+                message.style.color = "#0f0";
+                // No abrimos modal, solo mostramos que entró pero no hay nada
+            } else {
+                // 3. FALLO
+                manejarFallo();
+            }
+        }
+
+        function abrirRecompensa(data) {
+            // Llenar el modal con los datos del código
+            rTitle.innerText = data.title;
+            rMsg.innerText = data.msg;
+            rImg.src = data.img;
+            
+            // Limpiar y Llenar lista de archivos
+            rFiles.innerHTML = "";
+            data.files.forEach(file => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${file.name}</span> <a href="${file.link}">[DESCARGAR]</a>`;
+                rFiles.appendChild(li);
+            });
+
+            // Mostrar modal
+            modal.style.display = "flex";
+        }
+
+        function resetSuccess() {
+            display.style.color = "#0f0";
+            display.style.borderColor = "#0f0";
+            display.innerText = "OPEN";
+            message.innerHTML = "DESCIFRADO EXITOSO.";
+            message.style.color = "#0f0";
+            panel.style.boxShadow = "0 0 50px #0f0";
+        }
+
+        function manejarFallo() {
+            intentos++;
+            currentInput = "";
+            updateDisplay();
+
+            if (intentos < maxIntentos) {
+                message.innerText = "ERROR: Código inválido. 1 Intento restante.";
+                message.style.color = "orange";
+                display.style.borderColor = "orange";
+            } else {
+                destruirBoveda();
+            }
+        }
+
+        function destruirBoveda() {
+            message.innerText = "⚠ SISTEMA BLOQUEADO ⚠";
+            message.style.color = "red";
+            message.style.fontWeight = "bold";
+            display.innerText = "FAIL";
+            panel.classList.add('bloqueado');
+        }
+
+        function cerrarModal() {
+            modal.style.display = "none";
+            // Reiniciamos panel para permitir probar otro código si se desea
+            // Opcional: Si quieres que siga abierto en verde, no hagas nada.
+            // Si quieres reiniciar:
+            currentInput = "";
+            updateDisplay();
+            display.style.color = "#d4af37";
+            display.style.borderColor = "#333";
+            panel.style.boxShadow = "0 0 30px rgba(212, 175, 55, 0.1)";
+            message.innerText = "Esperando siguiente código...";
+            message.style.color = "#888";
+        }
+    </script>
+
+</body>
+</html>

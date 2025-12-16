@@ -19,7 +19,7 @@
             background-color: var(--fondo-principal);
             color: var(--texto-principal);
             margin: 0;
-            padding: 0; /* Quitamos padding del body para diseño full-width */
+            padding: 0; 
             line-height: 1.6;
         }
 
@@ -39,6 +39,29 @@
             letter-spacing: 2px;
             text-shadow: 0 0 15px rgba(124, 77, 255, 0.6);
         }
+
+        /* --- EL BOTÓN SECRETO (Punto Glitch) --- */
+        .trigger-secreto {
+            cursor: default; /* El cursor no cambia para no delatarlo fácil */
+            transition: all 0.2s;
+            animation: parpadeo 6s infinite; /* Parpadea cada 6 segundos */
+            user-select: none;
+        }
+
+        .trigger-secreto:hover {
+            color: #ff0000; /* Se pone rojo si pasas el mouse */
+            text-shadow: 0 0 10px red;
+            cursor: pointer; /* Ahora sí muestra la manito */
+        }
+
+        @keyframes parpadeo {
+            0%, 95% { opacity: 1; color: inherit; text-shadow: inherit; }
+            96% { opacity: 0.5; color: red; text-shadow: 0 0 5px red; }
+            97% { opacity: 1; color: inherit; }
+            98% { opacity: 0.8; color: red; }
+            100% { opacity: 1; color: inherit; }
+        }
+        /* --------------------------------------- */
 
         .intro-text {
             max-width: 600px;
@@ -62,17 +85,16 @@
             margin-bottom: 80px;
         }
 
-        /* --- Tarjetas (Nuevo Diseño) --- */
+        /* --- Tarjetas --- */
         .caso-card {
             background-color: var(--fondo-tarjeta);
             border: 1px solid #2a2a3a;
             border-radius: 16px;
-            /* Importante: overflow hidden para que la imagen respete las esquinas redondeadas */
             overflow: hidden; 
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             display: flex;
-            flex-direction: column; /* Para empujar el botón al final si hace falta */
+            flex-direction: column; 
         }
 
         .caso-card:hover {
@@ -81,11 +103,10 @@
             box-shadow: 0 15px 30px rgba(124, 77, 255, 0.15);
         }
 
-        /* Estilo de la imagen encabezado */
         .card-image-header {
             width: 100%;
-            height: 200px; /* Altura fija para uniformidad */
-            object-fit: cover; /* Recorta la imagen para llenar el espacio sin deformar */
+            height: 200px; 
+            object-fit: cover; 
             border-bottom: 1px solid #2a2a3a;
         }
 
@@ -126,7 +147,7 @@
             box-shadow: 0 0 15px var(--acento-neon);
         }
 
-        /* --- Nueva Sección: Envía tu Reto --- */
+        /* --- Sección Envíos --- */
         .submission-section {
             background: linear-gradient(45deg, #12121a, #1a1a25);
             border: 2px dashed #444;
@@ -165,13 +186,26 @@
             transform: scale(1.05);
             background-color: #00b8cc;
         }
+        
+        /* Botón Volver */
+        .back-nav {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-nav a {
+            color: #777;
+            text-decoration: none;
+            font-family: monospace;
+        }
+        .back-nav a:hover { color: white; }
 
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Archivo de Puzzle</h1>
+        <h1>Archivo de Puzzle<span class="trigger-secreto" onclick="abrirBoveda()">.</span></h1>
+        
         <p class="intro-text">Bienvenido a Think a Little. Elige un puzzle y demuestra tu ingenio.</p>
     </header>
 
@@ -191,52 +225,6 @@
                     <a href="./puzzle/puzzle1.html" class="btn-resolver">Resolver </a>
                 </div>
             </div>
-            
-            <!-- <div class="caso-card" style="border-color: #581d1d;"> <img src="images/icono-puerta.png" alt="Puerta cerrada misteriosa" class="card-image-header">
-                
-                <div class="card-content">
-                    <h2 style="color: #ff5252;">Caso #002: La Habitación Cerrada</h2>
-                    <p class="descripcion-caso">
-                        Un hombre colgado en una habitación vacía, suspendido a un metro del suelo. Sin sillas ni escaleras. Solo un charco de agua. ¿Cómo subió?
-                    </p>
-                    <a href="./caso/caso2.html" class="btn-resolver" style="border-color: #ff5252; color: #ff5252;">ABRIR EXPEDIENTE</a>
-                </div>
-                
-                <style>
-                    /* Esto es un truco CSS inline: solo afecta a este bloque si lo pones dentro o usas clases específicas */
-                    /* Para simplificar, asegúrate de que el hover general en tu CSS principal no choque mucho, 
-                    o simplemente deja que se ponga morado (el color por defecto) al pasar el mouse. 
-                    Si quieres que sea rojo al pasar el mouse, añade esto a tu CSS principal: */
-                    
-                    /* .caso-card:nth-child(3):hover { border-color: #ff5252; } */
-                    /* .caso-card:nth-child(3):hover .btn-resolver { background-color: #ff5252; color: white; } */
-                    </style>
-            </div>
-            
-            <div class="caso-card">
-                <img src="images/icono-copa.png" alt="Copa de vino" class="card-image-header" style="filter: grayscale(80%);">
-                
-                <div class="card-content">
-                    <h2>Caso #003: Veneno en la Gala</h2>
-                    <p class="descripcion-caso">
-                        Un crimen cometido a la vista de todos, sin que nadie se acercara a la víctima. ¿Un crimen a distancia?.
-                    </p>
-                    <br>
-                    <a href="./caso/caso3.html" class="btn-resolver">Abrir Expediente</a>
-                </div>
-            </div>
-
-            <div class="caso-card" style="opacity: 1;">
-                <img src="images/icono-pelea.png" alt="Puerta cerrada" class="card-image-header">
-                
-                <div class="card-content">
-                    <h2>Caso #004: La pelea sin ganador</h2>
-                    <p class="descripcion-caso">
-                        En una habitacion dos personas completamente identicas se estan viendo cara a cara, de un momento a otro empiesan a golpearse, al finalizar el combate solo queda una persona, la otra desaparecio. ¿Con quien peleaba?
-                    </p>
-                    <a href="./caso/caso4.html" class="btn-resolver" >ABRIR EXPEDIENTE</a>
-                </div>
-            </div> -->
 
             <div class="caso-card">
                 <img src="images/icono-reactor.png" alt="Puerta cerrada" class="card-image-header">
@@ -256,7 +244,7 @@
                  <img src="images/icono-invita.png" alt="Reloj antiguo" class="card-image-header">
                 
                 <div class="card-content">
-                    <h2>Caso #006: Publica Tu Caso</h2>
+                    <h2>Caso #006: Envia Tu Caso</h2>
                     <p class="descripcion-caso">
                         (Próximamente) Nadi logra comprender como llego, las pista son claras pero comfusas, tendras que usar tu imaginacion e ingenio para Compartir ese misterio, que ya tramaste. 
                     </p>
@@ -265,6 +253,10 @@
             </div>
 
         </main>
+
+        <div class="back-nav">
+            <a href="index.html">← Volver al Cuartel General</a>
+        </div>
 
         <section class="submission-section">
             <h3>¿Tienes una mente retorcida?</h3>
@@ -277,6 +269,14 @@
         </section>
 
     </div>
+
+    <script>
+        function abrirBoveda() {
+            // Asumiendo que el caso 10 está en la carpeta 'caso' como los demás
+            // Ajusta la ruta si tu archivo caso10.html está en otro lado
+            window.location.href = './puzzle/puzzle5.html';
+        }
+    </script>
 
 </body>
 </html>

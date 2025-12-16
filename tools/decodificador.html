@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Decodificador Binario - Bóveda Vane</title>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #00ff41; /* Verde terminal clásico */
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h2 { text-transform: uppercase; border-bottom: 2px solid #00ff41; }
+        textarea {
+            width: 600px;
+            height: 150px;
+            background-color: #1a1a1a;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            padding: 10px;
+            font-family: inherit;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #00ff41;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        button:hover { background-color: #fff; }
+        #resultado {
+            margin-top: 20px;
+            font-size: 1.2em;
+            min-height: 30px;
+            color: #fff; /* Resultado en blanco para destacar */
+        }
+    </style>
+</head>
+<body>
+
+    <h2>>> SISTEMA DE TRADUCCIÓN BINARIA <<</h2>
+    <p>Pegue el código recuperado del archivo .dat:</p>
+    
+    <textarea id="inputBinario" placeholder="Ej: 01001000 01001111 01001100 01000001..."></textarea>
+    
+    <button onclick="decodificar()">Ejecutar Traducción</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        function decodificar() {
+            // 1. Obtener el texto y quitar espacios o saltos de línea
+            const entrada = document.getElementById('inputBinario').value.replace(/\s+/g, '');
+            
+            // 2. Validar que sea binario
+            if (/[^01]/.test(entrada)) {
+                document.getElementById('resultado').innerText = "ERROR: SE DETECTARON CARACTERES NO BINARIOS.";
+                return;
+            }
+
+            let salida = "";
+
+            // 3. Procesar cada 8 caracteres (1 byte)
+            for (let i = 0; i < entrada.length; i += 8) {
+                // Tomar 8 bits
+                let byte = entrada.slice(i, i + 8);
+                // Convertir binario a número decimal y luego a letra (ASCII)
+                salida += String.fromCharCode(parseInt(byte, 2));
+            }
+
+            // 4. Mostrar resultado
+            document.getElementById('resultado').innerText = "> MENSAJE DESCIFRADO: " + salida;
+        }
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caso #008: El Esposo Telepático</title>
+    <title>Caso #006: El Esposo Atento</title>
     <style>
         /* Estilos visuales con tema "Índigo / Policial / Noche" */
         body {
@@ -118,7 +118,7 @@
 
     <div class="caso-card">
         <div class="badge">NIVEL: INTELIGENCIA POLICIAL</div>
-        <h1>EXPEDIENTE #008</h1>
+        <h1>EXPEDIENTE #006</h1>
         <p><strong>Víctima:</strong> Una mujer joven.</p>
         <p><strong>Lugar:</strong> Habitación 302 del Hotel "Grand Central".</p>
         
@@ -134,16 +134,16 @@
         </div>
 
         <h3>¿Por qué supieron que él era culpable?</h3>
-        <p>Analiza la llamada telefónica. ¿Qué error fatal cometió el esposo?</p>
+        <p>Analiza cuidadosamente. ¿Qué error fatal cometió el esposo?</p>
         
         <div style="text-align: center;">
             <input type="text" id="respuestaUsuario" placeholder="El policía no le dijo...">
-            <button onclick="verificarRespuesta()">INTERROGAR</button>
+            <button onclick="verificarRespuesta()">TU DEDUCCION</button>
         </div>
 
         <div id="resultado"></div>
 
-        <a href="misterios.html" class="volver-link">← Volver al Archivo de Casos</a>
+        <a href="../misterios.html" class="volver-link">← Volver al Archivo de Casos</a>
     </div>
 
     <script>
@@ -159,14 +159,14 @@
             } else if (respuesta === "") {
                 mensaje.innerHTML = "Tu silencio es tan sospechoso como el del esposo.";
                 mensaje.className = "";
-            } else if (respuesta.includes("tiempo") || respuesta.includes("rapido") || respuesta.includes("minutos")) {
-                mensaje.innerHTML = "Llegar rápido no es delito. Quizás estaba cerca. El error está en CÓMO llegó.";
+            } else if (respuesta.includes("tiempo") || respuesta.includes("rapido") || respuesta.includes("minutos") || respuesta.includes("cerca")) {
+                mensaje.innerHTML = "Llegar rápido no es delito. Quizás es sospechoso pero no definitivo. El error es descuido total.";
                 mensaje.className = "fail";
             } else if (respuesta.includes("pregunto") || respuesta.includes("preguntó")) {
                 mensaje.innerHTML = "Vas muy bien... ¿Qué fue lo que NO preguntó?";
                 mensaje.className = "fail";
             } else {
-                mensaje.innerHTML = "INCORRECTO. Escucha la llamada de nuevo. ¿Cómo sabías tú que tenías que ir al Hotel Grand Central?";
+                mensaje.innerHTML = "INCORRECTO. Escucha la llamada de nuevo. ¿Algo no esta bien en el Hotel Grand Central?";
                 mensaje.className = "fail";
             }
         }

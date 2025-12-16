@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Think a Little: Caja de Herramientas</title>
+    <style>
+        /* --- Estética General (ADN Think a Little) --- */
+        :root {
+            --fondo-principal: #0a0a12;
+            --fondo-tarjeta: #161625;
+            --texto-principal: #e0e0e0;
+            --acento-neon: #7c4dff;     /* Morado (Marca principal) */
+            --acento-tools: #ff9f43;    /* Naranja (Color de Herramientas) */
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--fondo-principal);
+            color: var(--texto-principal);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* --- Encabezado --- */
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a12 100%);
+            border-bottom: 2px solid #2a2a3a;
+        }
+
+        h1 {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--acento-tools); /* Título en Naranja */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(255, 159, 67, 0.4);
+        }
+
+        .intro-text {
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            color: #a0a0b0;
+        }
+
+        /* --- Grid System --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        /* --- Tarjetas de Herramientas --- */
+        .tool-card {
+            background-color: var(--fondo-tarjeta);
+            border: 1px solid #333;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Efecto Hover Específico para Herramientas */
+        .tool-card:hover {
+            transform: translateY(-7px);
+            border-color: var(--acento-tools);
+            box-shadow: 0 10px 25px rgba(255, 159, 67, 0.15);
+        }
+
+        /* Etiqueta "UTILITY" decorativa */
+        .tool-card::after {
+            content: 'UTILITY v1.0';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.3);
+            font-family: monospace;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        .card-image-header {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid #2a2a3a;
+            /* Filtro para que las imágenes se vean más técnicas/oscuras */
+            filter: grayscale(40%) contrast(1.1); 
+            transition: 0.3s;
+        }
+
+        .tool-card:hover .card-image-header {
+            filter: grayscale(0%) contrast(1);
+        }
+
+        .card-content {
+            padding: 25px;
+            flex-grow: 1; /* Esto hace que el botón se empuje hacia abajo si hay poco texto */
+            display: flex;
+            flex-direction: column;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin: 0 0 10px 0;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .descripcion-tool {
+            color: #b0b0c0;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+
+        /* Botón de Acción */
+        .btn-use {
+            display: block;
+            text-align: center;
+            padding: 12px 0;
+            background-color: transparent;
+            border: 1px solid var(--acento-tools);
+            color: var(--acento-tools);
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 6px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .tool-card:hover .btn-use {
+            background-color: var(--acento-tools);
+            color: #0a0a12; /* Texto oscuro para contraste con naranja */
+            box-shadow: 0 0 15px var(--acento-tools);
+        }
+
+        /* Botón Volver */
+        .back-nav {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-nav a {
+            color: #777;
+            text-decoration: none;
+            font-family: monospace;
+        }
+        .back-nav a:hover { color: white; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Caja de Herramientas</h1> <p class="intro-text">
+            Equipamiento técnico para detectives. Usa estas aplicaciones para analizar pistas, desencriptar códigos y revelar lo oculto.
+        </p>
+    </header>
+
+    <div class="container">
+        
+        <main class="tools-grid">
+
+            <div class="tool-card">
+                <img src="images/tool-code.jpg" alt="Pantalla de código" class="card-image-header">
+                
+                <div class="card-content">
+                    <h2>Decodificador</h2>
+                    <p class="descripcion-tool">
+                        ¿Encontraste un mensaje cifrado en Base64, César o Binario? Pégalo aquí para traducir el lenguaje encriptado a texto legible.
+                    </p>
+                    <a href="tools/decodificador.html" class="btn-use">Iniciar Sistema</a>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <img src="images/tool-eye.jpg" alt="Lente digital" class="card-image-header">
+                
+                <div class="card-content">
+                    <h2>Visualizador Espectral</h2>
+                    <p class="descripcion-tool">
+                        Analiza imágenes en busca de esteganografía o manipula el contraste para revelar texto oculto en evidencias visuales.
+                    </p>
+                    <a href="tools/visualizador.html" class="btn-use">Abrir Lente</a>
+                </div>
+            </div>
+
+            <div class="tool-card" style="opacity: 0.6; border-style: dashed;">
+                <img src="images/tool-build.jpg" alt="En construcción" class="card-image-header" style="filter: grayscale(100%);">
+                
+                <div class="card-content">
+                    <h2 style="color: #777;">Bóveda de Datos</h2>
+                    <p class="descripcion-tool">
+                        [EN DESARROLLO] Una base de datos segura para cruzar huellas digitales y perfiles de sospechosos. Próximamente.
+                    </p>
+                    <span class="btn-use" style="border-color: #555; color: #555; cursor: not-allowed;">Bloqueado</span>
+                </div>
+            </div>
+
+        </main>
+
+        <div class="back-nav">
+            <a href="index.html">← Volver al Cuartel General</a>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso #008:El Mayordomo Meticuloso</title>
+    <style>
+        :root {
+            --bg-main: #121212;
+            --bg-card: #1e1e24;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --accent-green: #28a745; /* Color VERDE para Principiante */
+            --accent-blue: #4a90e2;
+            --error-red: #ff3b3b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .case-container {
+            background-color: var(--bg-card);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+        }
+
+        .case-header {
+            padding: 25px;
+            border-bottom: 2px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .case-title { font-size: 1.8rem; flex-grow: 1; }
+        .case-id { color: var(--text-secondary); font-weight: bold; margin-right: 10px; }
+
+        .difficulty-badge {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: var(--accent-green);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            border: 1px solid var(--accent-green);
+        }
+
+        .case-story { padding: 25px; line-height: 1.6; font-size: 1.1rem; border-bottom: 1px solid #333; }
+
+        .evidence-section { padding: 25px; background-color: rgba(0,0,0,0.2); }
+        
+        .suspect-card {
+            background-color: #25252b;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-blue);
+        }
+        
+        .suspect-name { font-weight: bold; color: var(--text-primary); display: block; margin-bottom: 5px;}
+        .suspect-alibi { color: var(--text-secondary); font-style: italic; }
+
+        .resolution-panel { padding: 25px; background-color: var(--bg-card); border-top: 2px solid #333; }
+        
+        .input-group { display: flex; gap: 10px; margin-top: 15px; }
+        input[type="text"] {
+            flex-grow: 1; padding: 12px; border-radius: 6px; border: 1px solid #555;
+            background-color: #2a2a30; color: var(--text-primary);
+        }
+        button {
+            padding: 12px 25px; background-color: var(--accent-green); color: white;
+            border: none; border-radius: 6px; cursor: pointer; font-weight: bold;
+        }
+        button:hover { background-color: #218838; }
+
+        #feedbackArea { margin-top: 20px; padding: 20px; border-radius: 8px; display: none; }
+        .feedback-success { display: block !important; background-color: rgba(40, 167, 69, 0.2); border: 1px solid var(--accent-green); color: #75e68e; }
+        .feedback-partial { display: block !important; background-color: rgba(255, 193, 7, 0.2); border: 1px solid #ffc107; color: #ffdb72; }
+        .feedback-error { display: block !important; background-color: rgba(255, 59, 59, 0.2); border: 1px solid var(--error-red); color: #ff8888; }
+
+        .back-nav { margin-top: 20px; text-align: center; }
+        .back-nav a { color: var(--text-secondary); text-decoration: none; font-weight: bold; transition: color 0.3s; }
+        .back-nav a:hover { color: var(--accent-blue); }
+
+        @media (max-width: 600px) { .input-group { flex-direction: column; } button { width: 100%; } }
+    </style>
+</head>
+<body>
+
+    <main class="case-container">
+        <header class="case-header">
+            <div><span class="case-id">CASO #008</span><h1 class="case-title">El Mayordomo Meticuloso</h1></div>
+            <div class="difficulty-badge">🟢 PRINCIPIANTE</div>
+        </header>
+
+        <section class="case-story">
+            <p>El Sr. Black fue encontrado sin vida en su biblioteca un <strong>domingo por la mañana</strong>. La policía llegó de inmediato y cercó la mansión. Solo había 4 personas presentes además de la víctima.</p>
+            <br>
+            <p>El detective interrogó a los sospechosos sobre qué estaban haciendo en el momento del crimen. Todos parecían tranquilos, pero las declaraciones revelaron una conspiración.</p>
+        </section>
+
+        <section class="evidence-section">
+            <h3>👥 Interrogatorio (Domingo AM)</h3>
+            
+            <div class="suspect-card">
+                <span class="suspect-name">👩🍳 La Cocinera</span>
+                <span class="suspect-alibi">"Yo estaba en la cocina preparando el desayuno para el señor."</span>
+            </div>
+
+            <div class="suspect-card">
+                <span class="suspect-name">👨🌾 El Jardinero</span>
+                <span class="suspect-alibi">"Estaba en el patio trasero plantando las nuevas semillas de petunias."</span>
+            </div>
+
+            <div class="suspect-card">
+                <span class="suspect-name">🤵 El Mayordomo</span>
+                <span class="suspect-alibi">"Salí a la entrada principal para recoger el correo del buzón y traerlo."</span>
+            </div>
+
+            <div class="suspect-card">
+                <span class="suspect-name">💍 La Esposa</span>
+                <span class="suspect-alibi">"Estaba aún en la cama, esperando la corespondencia, esperaba mi estado de cuenta bancario."</span>
+            </div>
+        </section>
+
+        <section class="resolution-panel">
+            <h3>🕵️ Tu Deducción</h3>
+            <p style="color: var(--text-secondary);">¿Quién miente? (Puede haber más de un culpable)</p>
+            
+            <div class="input-group">
+                <input type="text" id="answerInput" placeholder="Nombra al culpable o culpables...">
+                <button id="submitBtn">ACUSAR</button>
+            </div>
+            <div id="feedbackArea"></div>
+        </section>
+    </main>
+
+    <div class="back-nav">
+        <a href="../misterios.html">← Volver al Archivo de Casos</a>
+    </div>
+
+    <script>
+        const inputField = document.getElementById('answerInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const feedbackArea = document.getElementById('feedbackArea');
+
+        function checkAnswer() {
+            let answer = inputField.value.toLowerCase().trim();
+            // Normalizar texto (quitar acentos)
+            answer = answer.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+            feedbackArea.className = ''; 
+
+            // CASO 1: RESPUESTA PERFECTA (Ambos)
+            if ((answer.includes("mayordomo") && answer.includes("esposa")) || 
+                answer.includes("ambos") || 
+                answer.includes("los dos") ||
+                answer.includes("pareja")) {
+                
+                feedbackArea.classList.add('feedback-success');
+                feedbackArea.innerHTML = `
+                    <strong>✅ ¡DEDUCCIÓN PERFECTA!</strong><br><br>
+                    Has atrapado a la pareja criminal. El <strong>Mayordomo</strong> mintió porque <strong>no hay servicio de correo los domingos</strong>. <br>
+                    Pero la <strong>Esposa</strong> se delató sola al apoyar su coartada falsa diciendo que "leyó las cartas" que él trajo. ¡Estaban compinchados!
+                `;
+            }
+            // CASO 2: SOLO MAYORDOMO (Parcial)
+            else if (answer.includes("mayordomo")) {
+                feedbackArea.classList.add('feedback-partial');
+                feedbackArea.innerHTML = `
+                    <strong>⚠️ RESPUESTA INCOMPLETA</strong><br><br>
+                    Vas por buen camino. El Mayordomo miente (no hay correo los domingos).
+                `;
+            }
+            // CASO 3: SOLO ESPOSA (Parcial)
+            else if (answer.includes("esposa") || answer.includes("mujer") || answer.includes("viuda")) {
+                feedbackArea.classList.add('feedback-partial');
+                feedbackArea.innerHTML = `
+                    <strong>⚠️ RESPUESTA INCOMPLETA</strong><br><br>
+                    Correcto, ella miente. Pero porque crees que ella miente?
+                `;
+            }
+            // CASO 4: INCORRECTO
+            else {
+                feedbackArea.classList.add('feedback-error');
+                feedbackArea.innerHTML = `
+                    <strong>❌ INOCENTE</strong><br><br>
+                    Esa persona tiene una coartada plausible para un domingo por la mañana. Revisa las declaraciones y recuerda qué día de la semana es. Hay un servicio público que no funciona hoy.
+                `;
+            }
+        }
+
+        submitBtn.addEventListener('click', checkAnswer);
+        inputField.addEventListener('keypress', (e) => { if(e.key === 'Enter') checkAnswer(); });
+    </script>
+</body>
+</html>

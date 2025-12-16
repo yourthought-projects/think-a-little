@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso #007: El Misterio De la Oficina de Seguridad</title>
+    <style>
+        :root {
+            --bg-main: #121212; /* Fondo oscuro principal */
+            --bg-card: #1e1e24; /* Fondo de la tarjeta del caso */
+            --text-primary: #e0e0e0; /* Texto claro */
+            --text-secondary: #a0a0a0; /* Texto secundario */
+            --accent-red: #ff3b3b; /* Color para dificultad ROJA */
+            --accent-blue: #4a90e2; /* Color para elementos interactivos */
+            --success-green: #28a745; /* Color de éxito */
+            --secret-purple: #9c27b0; /* Color para el secreto descubierto */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* --- Contenedor Principal del Caso --- */
+        .case-container {
+            background-color: var(--bg-card);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        /* --- Encabezado --- */
+        .case-header {
+            padding: 25px;
+            border-bottom: 2px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .case-id {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: bold;
+        }
+
+        .case-title {
+            font-size: 1.8rem;
+            flex-grow: 1;
+        }
+
+        .difficulty-badge {
+            background-color: rgba(255, 59, 59, 0.2);
+            color: var(--accent-red);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            border: 1px solid var(--accent-red);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .difficulty-badge::before {
+            content: '🔴';
+        }
+
+        /* --- Narrativa --- */
+        .case-story {
+            padding: 25px;
+            line-height: 1.6;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        /* --- Sección de Evidencias (Acordeón) --- */
+        .evidence-section {
+            padding: 25px;
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        .evidence-section h3 {
+            margin-bottom: 20px;
+            color: var(--accent-blue);
+        }
+
+        details {
+            background-color: var(--bg-card);
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            overflow: hidden;
+        }
+
+        summary {
+            padding: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: #25252b;
+            transition: background-color 0.3s;
+            user-select: none;
+            display: flex;
+            align-items: center;
+        }
+
+        summary:hover {
+            background-color: #2e2e36;
+        }
+
+        /* Iconos para las evidencias */
+        summary::before {
+            margin-right: 10px;
+        }
+        details.report summary::before { content: '📄'; }
+        details.scene summary::before { content: '🔍'; }
+        details.note summary::before { content: '📝'; }
+
+        .evidence-content {
+            padding: 20px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            background-color: #1a1a1f;
+        }
+
+        /* Resaltar los números en la nota */
+        .highlight-number {
+            color: var(--accent-red);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* --- Panel de Resolución --- */
+        .resolution-panel {
+            padding: 25px;
+            background-color: var(--bg-card);
+            border-top: 2px solid #333;
+        }
+
+        .resolution-panel h3 {
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #555;
+            background-color: #2a2a30;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        button#submitBtn {
+            padding: 12px 25px;
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        button#submitBtn:hover {
+            background-color: #357abd;
+        }
+
+        /* --- Área de Feedback --- */
+        #feedbackArea {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none; /* Oculto por defecto */
+        }
+
+        .feedback-success {
+            display: block !important;
+            background-color: rgba(40, 167, 69, 0.2);
+            border: 1px solid var(--success-green);
+            color: #75e68e;
+        }
+
+        .feedback-secret {
+            display: block !important;
+            background-color: rgba(156, 39, 176, 0.2);
+            border: 1px solid var(--secret-purple);
+            color: #d884eb;
+        }
+        
+        .feedback-error {
+            display: block !important;
+             background-color: rgba(255, 59, 59, 0.2);
+            border: 1px solid var(--accent-red);
+            color: #ff8888;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .case-header { flex-direction: column; align-items: flex-start; }
+            .difficulty-badge { width: 100%; justify-content: center; }
+            .input-group { flex-direction: column; }
+            button#submitBtn { width: 100%; }
+        }
+        .volver-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #777;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .volver-link:hover { color: #e67e22; }
+    </style>
+</head>
+<body>
+
+    <main class="case-container">
+        <header class="case-header">
+            <div>
+                <span class="case-id">CASO #011</span>
+                <h1 class="case-title">El Turno Eterno del Tte. Vanf</h1>
+            </div>
+            <div class="difficulty-badge">ROJO (Experto / Lateral)</div>
+        </header>
+
+        <section class="case-story">
+            <p>El Teniente Vanf, jefe de criptografía, ha sido encontrado muerto en su oficina privada dentro de la Agencia. Causa de muerte: Envenenamiento por cianuro en su café. Hora estimada: 03:00 AM.</p>
+            <br>
+            <p><strong>El Problema:</strong> La puerta tiene escáner biométrico y nadie entró. Las cámaras del pasillo muestran el corredor vacío desde las 23:00 hrs hasta el hallazgo del cuerpo. Vanf estaba obsesionado con sus secretos; dicen que guardaba "la verdad" en una bóveda digital oculta, pero se llevó la ubicación a la tumba.</p>
+            <br>
+            <p>¿Cómo lo mataron sin entrar?</p>
+        </section>
+
+        <section class="evidence-section">
+            <h3>📂 Expediente de Evidencias</h3>
+
+            <details class="report">
+                <summary>Reporte de Seguridad Automatizado</summary>
+                <div class="evidence-content">
+                    <p><em><strong>Log-System:</strong> - Sector AB-F04 (Oficina de Vanf):</em></p>
+                    <ul>
+                        <li>02:00 AM - Puerta: CERRADA (Sin actividad).</li>
+                        <li>02:55 AM - <strong>Sistema de Ventilación:</strong> Mantenimiento Automático INICIADO.</li>
+                        <li>03:05 AM - <strong>Sistema de Ventilación:</strong> Mantenimiento FINALIZADO. Sensores activos.</li>
+                        <li>03:10 AM - <strong>Sistema de Ventilación:</strong> [Sistema Restablecido]</li>
+                    </ul>
+                </div>
+            </details>
+
+            <details class="scene">
+                <summary>Inspección de la Escena</summary>
+                <div class="evidence-content">
+                    <p>El cuerpo está sobre el escritorio. El vaso de café tiene restos de polvo gris en el borde.</p>
+                    <p>En el suelo, se encuentra un <strong>pequeño anzuelo de pesca</strong> y un fragmento de hilo de nylon casi invisible.</p>
+                    <p>En su puño se encuentra lo que parece ser una nota escrita a mano</p>
+                </div>
+            </details>
+
+            <details class="note">
+                <summary>La Nota Arrugada (Manuscrito de Vanf)</summary>
+                <div class="evidence-content">
+                    <p>Encontrada en su puño cerrado. Parece un desvarío final de Vanf:</p>
+                    <br>
+                    <p><strong>Texto de la nota:</strong> </p>
+                    <br>
+                    <p style="font-family: 'Courier New', monospace; font-style: italic;">
+                        "Todo es un rompecabezas...<br>
+                        Gasté <span class="highlight-number">9</span> vidas protegiendo esto.<br>
+                        Mis <span class="highlight-number">5</span> sentidos me fallan ahora.<br>
+                        Estas <span class="highlight-number">4</span> paredes son mi ataúd.<br>
+                        A <span class="highlight-number">6</span> pies de profundidad descansaré.<br>
+                        <br>
+                        No busques aquí la respuesta. Ve a donde <strong>las piezas se unen</strong> . Busca el <strong>botón oculto</strong> que nadie ve y susúrrale m i   s </p>
+                </div>
+            </details>
+        </section>
+
+        <section class="resolution-panel">
+            <h3>📝 Informe Final del Agente</h3>
+            <p style="margin-bottom: 15px; color: var(--text-secondary);">Introduce tu conclusión sobre cómo ocurrió el crimen:</p>
+            
+            <div class="input-group">
+                <input type="text" id="answerInput" placeholder="Escribe tu teoría aquí...">
+                <button id="submitBtn">ENVIAR INFORME</button>
+            </div>
+
+            <div id="feedbackArea"></div>
+            <a href="../misterios.html" class="volver-link">← Volver al Archivo de Casos</a>
+        </section>
+    </main>
+    
+    <script>
+        // 1. Referencias a los elementos del DOM
+        const inputField = document.getElementById('answerInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const feedbackArea = document.getElementById('feedbackArea');
+
+        // Función auxiliar para quitar acentos (para que "ventilación" funcione igual que "ventilacion")
+        const removeAccents = (str) => {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        } 
+
+        // 2. Función principal de validación
+        function checkAnswer() {
+            // Obtener el valor, convertir a minúsculas y quitar espacios extra
+            let rawAnswer = inputField.value.toLowerCase().trim();
+            // Quitar acentos para facilitar la comparación
+            let normalizedAnswer = removeAccents(rawAnswer);
+
+            // Limpiar clases previas del área de feedback
+            feedbackArea.className = ''; 
+            feedbackArea.innerHTML = '';
+
+            // --- LÓGICA DE RESPUESTAS ---
+
+            // RUTA B: El Secreto (Código exacto)
+            if (normalizedAnswer === "9546" || 
+                normalizedAnswer.includes("verdad") || 
+                normalizedAnswer.includes("boveda") || 
+                normalizedAnswer.includes("digital") || 
+                normalizedAnswer.includes("secretos") ||
+                normalizedAnswer.includes("saber") ||
+                normalizedAnswer === "9 5 4 6") {
+                feedbackArea.classList.add('feedback-secret');
+                feedbackArea.innerHTML = `
+                    <strong>🔓 SECRETO DESBLOQUEADO (El Legado de Vanf):</strong><br><br>
+                    "Ignoras el asesinato y te centras en los números de la nota: <strong>9-5-4-6</strong>.<br>
+                    Vanf te ha dejado una instrucción clara: Ve a la sección de <strong>'PUZZLES'</strong> de esta web. Busca un botón invisible o secreto en esa página. Cuando te pida el código, introduce <strong>9546</strong>. Ahí está la verdadera Bóveda Central."
+                `;
+            } 
+            // RUTA A: El Detective (Resolver el asesinato)
+            // Buscamos palabras clave relacionadas con la solución del ducto
+            else if (
+                normalizedAnswer.includes("ventilacion") || 
+                normalizedAnswer.includes("ducto") || 
+                normalizedAnswer.includes("hilo") || 
+                normalizedAnswer.includes("anzuelo") ||
+                (normalizedAnswer.includes("techo") && normalizedAnswer.includes("veneno"))
+            ) {
+                feedbackArea.classList.add('feedback-success');
+                feedbackArea.innerHTML = `
+                    <strong>✅ CASO CERRADO (Justicia Policial):</strong><br><br>
+                    "¡Brillante deducción! El asesino nunca entró en la habitación. Aprovechó la ventana de mantenimiento de 10 minutos en los sensores de <strong>ventilación</strong> para bajar el veneno por la rejilla usando un <strong>hilo de pescar</strong>, justo sobre el café de Vanf. La policía ha arrestado al técnico de mantenimiento del piso superior. El caso está resuelto."  <P><em>Tambien sientes que algo no anda bin? parece que falta algo?</em></P>
+                `;
+            }
+            // RESPUESTA INCORRECTA
+            else {
+                feedbackArea.classList.add('feedback-error');
+                feedbackArea.innerHTML = `
+                    <strong>❌ INFORME RECHAZADO:</strong><br>
+                    "Tu teoría no explica las pruebas forenses ni la seguridad de la puerta. Revisa las evidencias nuevamente, Agente. Algo se te escapa."
+                `;
+            }
+
+            // Limpiar el input después de enviar (opcional)
+            // inputField.value = '';
+        }
+
+        // 3. Event Listeners (Escuchadores de eventos)
+        // Al hacer clic en el botón
+        submitBtn.addEventListener('click', checkAnswer);
+
+        // Al presionar "Enter" en el campo de texto
+        inputField.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+    </script>
+</body>
+</html>

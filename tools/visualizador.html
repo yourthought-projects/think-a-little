@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualizador Forense - Caso 010</title>
+    <style>
+        body {
+            background-color: #111;
+            color: #0ff; /* Azul cian estilo holograma/futurista */
+            font-family: 'Consolas', 'Monaco', monospace;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 { border-bottom: 1px dashed #0ff; padding-bottom: 10px; display: inline-block; }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            background: #000;
+            color: #005555; /* Texto oscuro para que no moleste la vista */
+            border: 1px solid #0ff;
+            padding: 10px;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background: #0ff;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #fff;
+            box-shadow: 0 0 15px #0ff;
+        }
+
+        #marco-imagen {
+            margin-top: 30px;
+            border: 2px solid #333;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: repeating-linear-gradient(
+                45deg,
+                #000,
+                #000 10px,
+                #111 10px,
+                #111 20px
+            );
+        }
+
+        img {
+            max-width: 100%;
+            display: none; /* Oculta por defecto */
+            border: 2px solid #0ff;
+        }
+
+        .status { margin-top: 10px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>>> RECONSTRUCTOR DE DATOS VISUALES <<</h1>
+        <p>Pegue el fragmento de código recuperado (Base64) para renderizar:</p>
+
+        <textarea id="inputData" placeholder="Pegue el contenido de Evidencia_Visual_010.txt aquí..."></textarea>
+        <br>
+        <button onclick="procesarImagen()">RENDERIZAR</button>
+
+        <p id="statusMsg" class="status">ESPERANDO DATOS...</p>
+
+        <div id="marco-imagen">
+            <img id="imagenResultado" src="" alt="Evidencia Decodificada">
+        </div>
+    </div>
+
+    <script>
+        function procesarImagen() {
+            const input = document.getElementById('inputData').value.trim();
+            const status = document.getElementById('statusMsg');
+            const img = document.getElementById('imagenResultado');
+
+            if (input.length < 10) {
+                status.innerText = "ERROR: DATOS INSUFICIENTES O CORRUPTOS.";
+                status.style.color = "red";
+                return;
+            }
+
+            status.innerText = "PROCESANDO MATRIZ DE PÍXELES...";
+            status.style.color = "#0ff";
+
+            // Pequeña simulación de carga para darle suspenso
+            setTimeout(() => {
+                // Lógica principal: Asignar el texto como fuente de la imagen
+                // Si el usuario olvidó copiar el encabezado "data:image...", intentamos arreglarlo
+                let fuenteImagen = input;
+                if (!input.startsWith('data:image')) {
+                     // Asumimos PNG si no trae cabecera, pero idealmente el string base64 completo la trae
+                    fuenteImagen = 'data:image/png;base64,' + input;
+                }
+
+                img.src = fuenteImagen;
+                img.style.display = 'block';
+                status.innerText = ">> RENDERIZADO COMPLETO: ARCHIVO 010 VISIBLE <<";
+            }, 1500); // 1.5 segundos de espera
+        }
+    </script>
+
+</body>
+</html>

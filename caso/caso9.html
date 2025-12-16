@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso #009: El Código Fantasma</title>
+    <style>
+        /* Estilos visuales con tema "Hacker / Matrix" */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #000000;
+            color: #00ff00; /* Texto verde terminal */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .caso-card {
+            background-color: #050505;
+            border: 1px solid #003300;
+            padding: 30px;
+            max-width: 600px;
+            border-radius: 0px; /* Bordes cuadrados más técnicos */
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            position: relative;
+        }
+
+        /* Etiqueta de Nivel */
+        .badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background-color: #003300;
+            color: #00ff00;
+            padding: 5px 15px;
+            border: 1px solid #00ff00;
+            font-size: 0.8rem;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        h1 { 
+            color: #00ff00;
+            text-align: center; 
+            border-bottom: 1px dashed #00ff00; 
+            padding-bottom: 10px; 
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+        
+        h3 { color: #ccffcc; margin-top: 25px; }
+        
+        .pista-box {
+            background-color: #0a0a0a;
+            padding: 15px;
+            border-left: 2px solid #00ff00;
+            margin: 20px 0;
+            color: #00cc00;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 12px;
+            font-size: 16px;
+            background: #000;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-family: monospace;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #003300;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: monospace;
+        }
+
+        button:hover { background-color: #00ff00; color: black; }
+
+        #resultado {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 20px;
+            padding: 10px;
+        }
+        
+        .win { border: 1px solid #00ff00; background: #001100; }
+        .fail { border: 1px solid red; color: red; }
+
+        .volver-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #004400;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .volver-link:hover { color: #00ff00; }
+
+    </style>
+</head>
+<body>
+
+    <div class="caso-card">
+        <div class="badge">NIVEL: HACKER</div>
+        <h1>EXPEDIENTE #009</h1>
+        <p><strong>Objetivo:</strong> Recuperar mensaje interceptado.</p>
+        
+        <p>Un espía digital envió un archivo HTML vacío a su base. La policía cibernética dice que no hay texto en la pantalla, la página está en blanco. Sin embargo, el espía insiste en que la información está ahí.</p>
+
+        <div class="pista-box">
+            <ul>
+                <li>El archivo pesa 2KB (demasiado para estar vacío).</li>
+                <li>Si imprimes la página en papel, sale en blanco.</li>
+                <li>El mensaje no requiere tinta invisible ni luz UV, solo un navegador web.</li>
+                <li><strong>Pista del espía:</strong> "No mires la página. Mira de qué está hecha la página."</li>
+            </ul>
+        </div>
+
+        <h3>¿Cómo se lee el mensaje?</h3>
+        <p>¿Qué herramienta del navegador usas para ver lo que hay "detrás" de la web?</p>
+        
+        <div style="text-align: center;">
+            <input type="text" id="respuestaUsuario" placeholder="Comando o herramienta...">
+            <button onclick="verificarRespuesta()">EJECUTAR</button>
+        </div>
+
+        <div id="resultado"></div>
+
+        <a href="misterios.html" class="volver-link">← Volver al Sistema</a>
+    </div>
+
+    <script>
+        function verificarRespuesta() {
+            let respuesta = document.getElementById("respuestaUsuario").value;
+            respuesta = respuesta.toLowerCase().trim();
+            let mensaje = document.getElementById("resultado");
+
+            // Palabras clave: Inspeccionar, codigo fuente, source, f12, console, consola
+            if (respuesta.includes("inspeccion") || respuesta.includes("f12") || respuesta.includes("codigo") || respuesta.includes("fuente") || respuesta.includes("source") || respuesta.includes("consola")) {
+                mensaje.innerHTML = "¡ACCESO CONCEDIDO! 🔓 <br> El mensaje estaba oculto en el <strong>Código Fuente</strong> (o en la Consola). <br><br> <span style='color:white'>⚠ MISIÓN SECRETA:</span> Ve ahora mismo a la <strong>Portada Principal</strong> de esta web, presiona F12 y mira la Consola. Hay algo para ti.";
+                mensaje.className = "win";
+            } else if (respuesta === "") {
+                mensaje.innerHTML = "Error: Input vacío.";
+                mensaje.className = "";
+            } else {
+                mensaje.innerHTML = "ACCESO DENEGADO. No busques en la pantalla. Busca en las entrañas del navegador.";
+                mensaje.className = "fail";
+            }
+        }
+    </script>
+
+</body>
+</html>

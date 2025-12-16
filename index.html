@@ -139,6 +139,13 @@
         }
         .cat-puzzles .cat-icon { color: var(--acento-verde); }
 
+        /* Tools: Brillo Naranja */
+        .cat-tools:hover .cat-icon img {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 15px #ff9f43);
+        }
+        .cat-tools .cat-icon { color: var(--acento-); }
+
         /* Games: (Opcional si lo habilitas luego) */
         .cat-games:hover .cat-icon img {
             filter: drop-shadow(0 0 15px #ff5252);
@@ -181,6 +188,107 @@
         /* Responsive adjustments para el título gigante */
         @media (max-width: 768px) {
             .hero-title { font-size: 2.5rem; }
+        }
+
+        /* --- MODAL SECRETO (TOP SECRET) --- */
+        .modal-secreto {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 9999; /* Por encima de todo */
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .dossier-secreto {
+            background-color: #1a0505;
+            border: 2px solid #ff0000;
+            width: 90%;
+            max-width: 600px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.3);
+            /* Animación de entrada */
+            animation: aparecer 0.5s ease-out;
+        }
+
+        /* Efecto de sello de "CLASIFICADO" */
+        .sello-top-secret {
+            color: rgba(255, 0, 0, 0.15);
+            font-size: 5rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-weight: bold;
+            pointer-events: none;
+            border: 5px solid rgba(255, 0, 0, 0.15);
+            padding: 10px 40px;
+            text-transform: uppercase;
+        }
+
+        .dossier-titulo {
+            color: #ff3333;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-bottom: 1px solid #ff3333;
+            padding-bottom: 10px;
+        }
+
+        .lista-secretos {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .lista-secretos li {
+            margin: 15px 0;
+            border-bottom: 1px dashed #444;
+            padding-bottom: 10px;
+        }
+
+        .link-secreto {
+            color: #fff;
+            text-decoration: none;
+            font-family: monospace;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .link-secreto:hover {
+            color: #ff3333;
+            text-shadow: 0 0 8px red;
+        }
+
+        .cerrar-modal {
+            margin-top: 30px;
+            background: transparent;
+            border: 1px solid #666;
+            color: #666;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: monospace;
+            transition: 0.3s;
+        }
+
+        .cerrar-modal:hover {
+            border-color: #ff3333;
+            color: #ff3333;
+        }
+
+        @keyframes aparecer {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
@@ -234,6 +342,16 @@
                     </div>
                 </a>
 
+                <a href="tools.html" class="category-card cat-puzzles">
+                    <div class="cat-icon">
+                        <img src="./images/cat-tools.png" alt="Icono Rompecabezas">
+                    </div>
+                    <div class="cat-title">Caja de Herramientas</div>
+                    <div class="cat-desc">
+                        Equipamiento técnico para detectives. Usa estas aplicaciones para analizar pistas, desencriptar códigos y revelar lo oculto. 
+                    </div>
+                </a>
+
                 <div class="category-card cat-games">
                     <div class="cat-icon">
                         <img src="./images/cat-game.png" alt="Icono Gamepad" style="opacity: 0.5;">
@@ -282,10 +400,83 @@
         </section>
 
     </div>
+  <!--MOdal Sec-->
+    <div id="modalSecreto" class="modal-secreto">
+        <div class="dossier-secreto">
+            <div class="sello-top-secret">CONFIDENCIAL</div>
+            
+            <h2 class="dossier-titulo">NIVEL OMEGA: ACCESO CONCEDIDO</h2>
+            <p style="color: #999; margin-bottom: 30px;">Has descubierto el protocolo "ORIGEN". Bienvenido a la oscuridad.</p>
+
+            <ul class="lista-secretos">
+                <li>
+                    <a href="#" class="link-secreto">
+                        <span>📁 Proyecto MK-Ultra</span>
+                        <span>[BLOQUEADO]</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="link-secreto">
+                        <span>📁 Caso X: El Viajero del Tiempo</span>
+                        <span>[PRÓXIMAMENTE]</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="caso9.html" class="link-secreto">
+                        <span>📁 Archivo 009: Código Fantasma</span>
+                        <span style="color:#00ff00">[RESUELTO]</span>
+                    </a>
+                </li>
+            </ul>
+
+            <button onclick="cerrarSecreto()" class="cerrar-modal">CERRAR DOSSIER</button>
+        </div>
+    </div>
 
     <footer>
         Think a Little © 2023 - Desarrollado para mentes inquietas.
     </footer>
+<script>
+    // Esto imprime un mensaje estilizado en la consola del navegador
+    console.log("%c 🕵️‍♂️ ¡ALTO AHÍ, DETECTIVE! 🕵️‍♀️", "color: #7c4dff; font-size: 25px; font-weight: bold; background: #000; padding: 10px; border-radius: 5px;");
+    console.log("%cHas demostrado curiosidad, la cualidad más importante.", "color: #00e5ff; font-size: 14px;");
+    console.log("%cTu Palabra Clave Secreta es: ORIGEN", "color: #00ff9d; font-size: 18px; font-weight: bold;");
+    console.log("Envíala al correo de contacto para entrar al 'Círculo Interior'.");
+</script>
+<script>
+    // --- LÓGICA DE SECRETOS Y HUEVOS DE PASCUA ---
 
+    let tecleado = ""; // Aquí guardamos lo que escribe el usuario
+    const codigoSecreto = "ORIGEN"; // La palabra mágica
+    
+    // Escuchamos cada tecla que presiona el usuario
+    document.addEventListener('keydown', (event) => {
+        // Añadimos la tecla presionada (convertida a mayúscula)
+        tecleado += event.key.toUpperCase();
+
+        // Solo guardamos las últimas letras necesarias (para no llenar la memoria)
+        if (tecleado.length > codigoSecreto.length) {
+            tecleado = tecleado.slice(-codigoSecreto.length);
+        }
+
+        // Comprobamos si coincide con la palabra mágica
+        if (tecleado === codigoSecreto) {
+            abrirSecreto();
+        }
+    });
+
+    function abrirSecreto() {
+        const modal = document.getElementById('modalSecreto');
+        modal.style.display = 'flex';
+        // Sonido opcional de acceso (si quieres agregarlo en el futuro)
+        console.log("ACCESO AL ÁREA RESTRINGIDA AUTORIZADO");
+    }
+
+    function cerrarSecreto() {
+        document.getElementById('modalSecreto').style.display = 'none';
+        tecleado = ""; // Reiniciamos para que tenga que escribirlo de nuevo si quiere volver a entrar
+    }
+</script>
 </body>
 </html>
+

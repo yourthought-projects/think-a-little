@@ -1,0 +1,44 @@
+================================================================
+REGISTRO DE SEGURIDAD: BÓVEDA CENTRAL VANE
+ID CASO: 010
+FECHA: [DATOS CORRUPTOS]
+OFICIAL A CARGO: Tte. Vane
+ESTADO: COMPROMETIDO
+================================================================
+
+REPORTE DE INCIDENTE:
+La seguridad física de la bóveda parece intacta, pero los registros 
+digitales muestran anomalías. Alguien ha estado aquí antes que nosotros. 
+Los sellos de presión no fueron forzados; quien entró tenía las llaves.
+
+NOTAS DEL INVESTIGADOR:
+1. Sobre la interfaz de acceso:
+   He pasado horas buscando una caja de texto o un botón de "Login" en la 
+   terminal principal, pero la pantalla está estática. Releyendo el manual 
+   técnico heredado, encontré una nota al margen escrita con tinta roja: 
+   "La página no es ciega, pero sí muda. TIENE OÍDOS. No busques dónde 
+   escribir. El sistema escucha tus teclas en el vacío. Para volver al 
+   principio de todo, simplemente teclea: origen".
+   
+   (Nota mental: Debo probar teclear esa palabra directamente en la pantalla 
+   de inicio, aunque no vea nada escribiéndose).
+
+2. Personal sospechoso:
+   He notado discrepancias en los horarios del equipo de vigilancia externa. 
+   Hay un hueco en la rotación del turno nocturno asignado al expediente 015. 
+   El guardia asignado firma con dos caligrafías distintas. A veces creo que 
+   estamos lidiando con un "Agente Doble". Debo investigar eso a fondo 
+   en el futuro.
+
+3. Hallazgos físicos:
+   Debajo del panel de control encontré un fragmento de papel rasgado. 
+   Parece corresponder a una ubicación geográfica, pero no coincide con 
+   ninguna instalación actual. Quizás el Mapa Viejo pueda darle sentido 
+   a estos números:
+
+   COORDENADAS RECUPERADAS:
+   >>> 19°25'57.4"N 99°07'59.6"W <<<
+
+CIERRE DE SESIÓN.
+Vane fuera.
+================================================================
