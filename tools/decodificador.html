@@ -57,27 +57,38 @@
 
     <script>
         function decodificar() {
-            // 1. Obtener el texto y quitar espacios o saltos de línea
-            const entrada = document.getElementById('inputBinario').value.replace(/\s+/g, '');
-            
-            // 2. Validar que sea binario
-            if (/[^01]/.test(entrada)) {
-                document.getElementById('resultado').innerText = "ERROR: SE DETECTARON CARACTERES NO BINARIOS.";
-                return;
-            }
+        // 1. Limpiar la entrada (quitar espacios y saltos de línea)
+        const entrada = document.getElementById('inputBinario').value.replace(/\s+/g, '');
+        
+        // 2. Validar que solo haya 0s y 1s
+        if (/[^01]/.test(entrada)) {
+            document.getElementById('resultado').innerText = "ERROR: SE DETECTARON CARACTERES NO BINARIOS.";
+            return;
+        }
 
-            let salida = "";
+        // 3. Convertir la cadena binaria a un array de números (Bytes)
+        // Creamos un array donde guardaremos los números
+        const bytes = [];
 
-            // 3. Procesar cada 8 caracteres (1 byte)
-            for (let i = 0; i < entrada.length; i += 8) {
-                // Tomar 8 bits
-                let byte = entrada.slice(i, i + 8);
-                // Convertir binario a número decimal y luego a letra (ASCII)
-                salida += String.fromCharCode(parseInt(byte, 2));
-            }
+        for (let i = 0; i < entrada.length; i += 8) {
+            // Tomamos grupos de 8 bits
+            const byteBinario = entrada.slice(i, i + 8);
+            // Convertimos ese grupo a número decimal y lo guardamos
+            bytes.push(parseInt(byteBinario, 2));
+        }
 
-            // 4. Mostrar resultado
-            document.getElementById('resultado').innerText = "> MENSAJE DESCIFRADO: " + salida;
+        // 4. Usar TextDecoder para traducir los bytes a Texto (Soporta UTF-8/Acentos)
+        try {
+            // Convertimos nuestro array normal a un Uint8Array (formato que pide el navegador)
+            const byteArray = new Uint8Array(bytes);
+            // El decodificador une las piezas correctamente (ej: sabe que dos bytes hacen una 'é')
+            const decoder = new TextDecoder('utf-8');
+            const textoFinal = decoder.decode(byteArray);
+
+            document.getElementById('resultado').innerText = "> MENSAJE DESCIFRADO: " + textoFinal;
+        } catch (e) {
+            document.getElementById('resultado').innerText = "ERROR DE DECODIFICACIÓN.";
+        }
         }
     </script>
 </body>
