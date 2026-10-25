@@ -1,44 +1,70 @@
+>>> SISTEMA DE RECUPERACIÓN DE DATOS (V.A.N.E. OS)
+>>> ARCHIVO: BITÁCORA PERSONAL / NIVEL 5 (SOLO OJOS)
+>>> USUARIO: Tte. Alejandro Vanf [ID: 9546-OMEGA]
+>>> ESTADO DEL USUARIO: TERMINADO (KIA)
+
 ================================================================
-REGISTRO DE SEGURIDAD: BÓVEDA CENTRAL VANE
-ID CASO: 010
-FECHA: [DATOS CORRUPTOS]
-OFICIAL A CARGO: Tte. Vane
-ESTADO: COMPROMETIDO
+ENTRADA #001 - FECHA: 04/01/2026 - 23:15 HRS
 ================================================================
+Algo está podrido en la Agencia. Al principio pensé que eran errores 
+de paridad en los servidores de criptografía, pero hoy encontré el patrón.
+No son glitches. Son mensajes ocultos dentro de los reportes de tráfico.
+Alguien está usando la red interna para mover datos sobre el "Proyecto 
+Silencio". Si mis sospechas son ciertas, esto va más allá de un simple 
+topo. Es el Sindicato.
 
-REPORTE DE INCIDENTE:
-La seguridad física de la bóveda parece intacta, pero los registros 
-digitales muestran anomalías. Alguien ha estado aquí antes que nosotros. 
-Los sellos de presión no fueron forzados; quien entró tenía las llaves.
-
-NOTAS DEL INVESTIGADOR:
-1. Sobre la interfaz de acceso:
-   He pasado horas buscando una caja de texto o un botón de "Login" en la 
-   terminal principal, pero la pantalla está estática. Releyendo el manual 
-   técnico heredado, encontré una nota al margen escrita con tinta roja: 
-   "La página no es ciega, pero sí muda. TIENE OÍDOS. No busques dónde 
-   escribir. El sistema escucha tus teclas en el vacío. Para volver al 
-   principio de todo, simplemente teclea: origen".
-   
-   (Nota mental: Debo probar teclear esa palabra directamente en la pantalla 
-   de inicio, aunque no vea nada escribiéndose).
-
-2. Personal sospechoso:
-   He notado discrepancias en los horarios del equipo de vigilancia externa. 
-   Hay un hueco en la rotación del turno nocturno asignado al expediente 015. 
-   El guardia asignado firma con dos caligrafías distintas. A veces creo que 
-   estamos lidiando con un "Agente Doble". Debo investigar eso a fondo 
-   en el futuro.
-
-3. Hallazgos físicos:
-   Debajo del panel de control encontré un fragmento de papel rasgado. 
-   Parece corresponder a una ubicación geográfica, pero no coincide con 
-   ninguna instalación actual. Quizás el Mapa Viejo pueda darle sentido 
-   a estos números:
-
-   COORDENADAS RECUPERADAS:
-   >>> 19°25'57.4"N 99°07'59.6"W <<<
-
-CIERRE DE SESIÓN.
-Vane fuera.
 ================================================================
+ENTRADA #004 - FECHA: 10/01/2026 - 02:40 HRS
+================================================================
+No puedo confiar en nadie. Mi tarjeta de acceso falló dos veces hoy 
+en el sector de seguridad. ¿Casualidad? No lo creo. Me están aislando.
+
+He comenzado a escribir el código fuente de V.A.N.E. (Virtual Artificial 
+Neural Entity). Si me eliminan, necesito que algo de mí sobreviva. 
+Estoy volcando mis patrones lógicos, mi método deductivo y mis archivos 
+en esta IA. 
+
+La esconderé a plena vista. He comprado el dominio "Think a Little". 
+Parecerá una web de acertijos para aficionados. Un "gimnasio mental". 
+Nadie busca secretos en un juego de niños.
+
+================================================================
+ENTRADA #007 - FECHA: 20/01/2026 - 18:00 HRS
+================================================================
+El código de la Bóveda está listo. He usado mi número de placa invertido 
+y fragmentado. Solo alguien que realmente piense "fuera de la caja" 
+podrá encontrarlo. 
+
+Si estás leyendo esto, significa que el sistema V.A.N.E. te ha elegido. 
+No eres un jugador. Eres mi reemplazo.
+
+He escondido la evidencia incriminatoria en fragmentos binarios dispersos 
+por los puzzles. El caso del "Reloj" (Caso 1), la "Habitación Cerrada" 
+(Caso 2)... no son solo historias. Son alegorías de crímenes reales que 
+la Agencia encubrió.
+
+================================================================
+ENTRADA #FINAL - FECHA: 23/01/2026 - 02:50 HRS
+================================================================
+Están aquí. O al menos, están cerca.
+El sistema de ventilación de mi oficina acaba de encenderse solo. 
+Es extraño, no estaba programado mantenimiento hasta el mes que viene. 
+Se escucha un ruido metálico en el ducto... como si algo bajara.
+
+Mi café sabe raro hoy. Un poco... amargo. Como a almendras.
+
+Si mi corazón se detiene, el Protocolo "Dead Man" se activará y publicará 
+la web. Escúchame bien, candidato:
+
+No busques al asesino en la puerta. La puerta siempre estuvo cerrada.
+El peligro viene de arriba.
+
+V.A.N.E. ahora es tuya. 
+Protege el archivo "Pista_Caso_11.dat". Es la ubicación de ellos.
+
+Fin de la transmisión.
+[SEÑAL PERDIDA]
+[SISTEMA REINICIADO]
+[BIENVENIDO, USUARIO INVITADO]
+
+pequeña carpa de lona color crema, montada 

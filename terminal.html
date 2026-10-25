@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>root@vane-server:~</title>
+    <style>
+        /* --- ESTÉTICA HACKER RETRO --- */
+        body {
+            background-color: #0c0c0c;
+            color: #33ff00; /* Verde fósforo clásico */
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            overflow: hidden; /* Evita scrollbar nativo */
+            box-sizing: border-box;
+            text-shadow: 0 0 2px #33ff00; /* Brillo CRT */
+        }
+
+        /* Efecto de líneas de escaneo (Scanlines) */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        #terminal-window {
+            height: 100%;
+            width: 100%;
+            overflow-y: auto; /* Scroll interno */
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Ocultar la barra de scroll pero permitir scroll */
+        #terminal-window::-webkit-scrollbar { width: 0px; }
+
+        .output-line {
+            margin-bottom: 5px;
+            white-space: pre-wrap; /* Mantiene formato de texto */
+            word-wrap: break-word;
+        }
+
+        .command-line {
+            display: flex;
+            align-items: center;
+        }
+
+        .prompt {
+            color: #00bfff; /* Azul para el usuario/host */
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        /* Input invisible pero funcional */
+        #cmd-input {
+            background: transparent;
+            border: none;
+            color: #33ff00;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            flex-grow: 1;
+            outline: none;
+            text-shadow: 0 0 2px #33ff00;
+        }
+
+        /* Clases de utilidad para colores */
+        .txt-red { color: #ff5555; text-shadow: 0 0 2px #ff5555; }
+        .txt-blue { color: #5555ff; font-weight: bold; }
+        .txt-gray { color: #888; }
+        .txt-white { color: #fff; }
+
+        /* Animación de carga inicial */
+        @keyframes blink { 50% { opacity: 0; } }
+        .cursor { animation: blink 1s step-end infinite; }
+    </style>
+</head>
+<body>
+
+    <div id="terminal-window">
+        <div id="boot-sequence"></div>
+        <div id="history"></div>
+        
+        <div class="command-line" id="input-area" style="display:none;">
+            <span class="prompt">guest@vane-server:~$</span>
+            <input type="text" id="cmd-input" autocomplete="off" autofocus>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN DEL SISTEMA DE ARCHIVOS FALSO ---
+        const fileSystem = {
+            "leeme.txt": "Bienvenido al servidor privado V.A.N.E.\nPara ver los archivos, usa el comando 'ls'.\nPara leer un archivo, usa 'cat [nombre_archivo]'.\nSi te pierdes, escribe 'help'.",
+            "bitacora_vane.txt": ">>> ENTRADA #FINAL: \nEstán aquí. Mi café sabe a almendras. \nHe fragmentado la clave. \nRecuerda: El peligro viene de arriba.",
+            "pista_caso_11.dat": "[ARCHIVO BINARIO] \n01000001 01001100 01000101 01010010 01010100 01000001...\n(Usa el decodificador en la sección Tools)",
+            "sys_log.log": "[ERROR] Intento de acceso no autorizado desde IP 192.168.X.X (Sindicato).\n[WARNING] Temperatura del núcleo elevada.\n[OK] Protocolo 'Dead Man' activado.",
+            "admin_pass.key": "ACCESO DENEGADO: Permisos insuficientes. Requiere nivel ROOT."
+        };
+
+        const commands = {
+            "help": "Comandos disponibles:\n  ls       - Listar archivos\n  cat [x]  - Leer contenido del archivo 'x'\n  whoami   - Mostrar usuario actual\n  clear    - Limpiar pantalla\n  date     - Mostrar fecha del sistema\n  exit     - Salir de la terminal (Volver al inicio)\n  sudo     - Ejecutar como superusuario",
+            "whoami": "guest (Nivel de acceso: BAJO)",
+            "ls": () => Object.keys(fileSystem).map(f => f.includes('.key') ? `<span class='txt-red'>${f}</span>` : `<span class='txt-white'>${f}</span>`).join('  '),
+            "date": () => new Date().toString(),
+            "exit": "Cerrando conexión segura...",
+            "sudo": "Introduce contraseña de administrador para 'root':"
+        };
+
+        // --- REFERENCIAS DOM ---
+        const terminalWindow = document.getElementById('terminal-window');
+        const historyDiv = document.getElementById('history');
+        const inputArea = document.getElementById('input-area');
+        const inputField = document.getElementById('cmd-input');
+        const bootDiv = document.getElementById('boot-sequence');
+
+        // --- SECUENCIA DE ARRANQUE (BOOT) ---
+        const bootLines = [
+            "V.A.N.E. OS kernel v1.0.4 loading...",
+            "[OK] CPU 0 initialization complete.",
+            "[OK] Loading memory banks... 64TB OK.",
+            "[WARNING] Integrity check failed on sector 9.",
+            "Mounting virtual filesystem...",
+            "Starting secure shell (SSH)...",
+            "Connection established.",
+            " "
+        ];
+
+        let bootIndex = 0;
+
+        function runBoot() {
+            if (bootIndex < bootLines.length) {
+                const line = document.createElement('div');
+                line.className = 'output-line txt-gray';
+                line.innerText = bootLines[bootIndex];
+                bootDiv.appendChild(line);
+                bootIndex++;
+                setTimeout(runBoot, Math.random() * 400 + 100); // Tiempo aleatorio entre líneas
+            } else {
+                // Fin del boot
+                const welcome = document.createElement('div');
+                welcome.className = 'output-line';
+                welcome.innerHTML = "<br><span class='txt-blue'>BIENVENIDO AL SISTEMA V.A.N.E.</span><br>Escriba 'help' para ver los comandos disponibles.<br>";
+                historyDiv.appendChild(welcome);
+                inputArea.style.display = 'flex';
+                inputField.focus();
+            }
+        }
+
+        // --- LÓGICA DE COMANDOS ---
+        inputField.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const rawInput = inputField.value.trim();
+                const args = rawInput.split(' ');
+                const cmd = args[0].toLowerCase();
+                const param = args[1]; // Para comandos como 'cat archivo'
+
+                // 1. Mostrar lo que el usuario escribió
+                addLine(`guest@vane-server:~$ ${rawInput}`, 'prompt');
+                
+                // 2. Procesar comando
+                inputField.value = ''; // Limpiar input
+
+                if (cmd === '') return;
+
+                if (cmd === 'clear') {
+                    historyDiv.innerHTML = '';
+                    return;
+                }
+
+                if (cmd === 'exit') {
+                    addLine("Desconectando...", "txt-red");
+                    setTimeout(() => {
+                        window.location.href = 'index.html'; // Ajusta esta ruta si es necesario
+                    }, 1000);
+                    return;
+                }
+
+                if (cmd === 'ls') {
+                    addLine(commands['ls']());
+                    return;
+                }
+
+                if (cmd === 'cat') {
+                    if (!param) {
+                        addLine("Error: Especifica el nombre del archivo (ej: cat leeme.txt)", "txt-red");
+                    } else if (fileSystem[param]) {
+                        addLine(fileSystem[param], "txt-white");
+                    } else if (fileSystem[param.toLowerCase()]) { // Intento insensible a mayúsculas
+                        addLine(fileSystem[param.toLowerCase()], "txt-white");
+                    } else {
+                        addLine(`Error: El archivo '${param}' no existe.`, "txt-red");
+                    }
+                    return;
+                }
+
+                if (cmd === 'sudo') {
+                    addLine("Acceso denegado: Este incidente será reportado al Sindicato.", "txt-red");
+                    return;
+                }
+                
+                // Easter Egg: La contraseña maestra
+                if (cmd === 'origen' || cmd === '9546') {
+                    addLine(">> CÓDIGO MAESTRO RECONOCIDO <<", "txt-blue");
+                    addLine("Desbloqueando directorios ocultos... [EN CONSTRUCCIÓN PARA TEMPORADA 2]", "txt-gray");
+                    return;
+                }
+
+                // Comandos genéricos
+                if (commands[cmd]) {
+                    addLine(commands[cmd]);
+                } else {
+                    addLine(`Comando no encontrado: ${cmd}. Escribe 'help' para ayuda.`, "txt-gray");
+                }
+            }
+        });
+
+        // Función auxiliar para añadir líneas
+        function addLine(text, cssClass = '') {
+            const div = document.createElement('div');
+            div.className = `output-line ${cssClass}`;
+            // Si es prompt, añadir el color azul al inicio
+            if (cssClass === 'prompt') {
+                div.innerHTML = `<span class="prompt">guest@vane-server:~$</span> ${text.replace('guest@vane-server:~$ ', '')}`;
+            } else {
+                div.innerHTML = text;
+            }
+            historyDiv.appendChild(div);
+            terminalWindow.scrollTop = terminalWindow.scrollHeight; // Auto-scroll
+        }
+
+        // Mantener el foco siempre en el input
+        document.addEventListener('click', () => {
+            inputField.focus();
+        });
+
+        // Iniciar
+        runBoot();
+
+    </script>
+<script data-goatcounter="https://think.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js">
+</script>
+</body>
+</html>

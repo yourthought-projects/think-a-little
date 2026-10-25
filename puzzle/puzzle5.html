@@ -180,7 +180,7 @@
         
         <p class="message" id="msgStatus">Esperando entrada...</p>
 
-        <a href="../index.html" class="volver-link">← Salir del Sistema</a>
+        <a href="../puzzles.html" class="volver-link">← Salir del Sistema</a>
     </div>
 
     <div id="modalRecompensa">
@@ -209,12 +209,13 @@
         const bovedaSecrets = {
             "9546": {
                 title: "NIVEL 1: LA INICIACIÓN",
-                msg: "Felicidades, Detective. Has encontrado la primera llave. Pero ten cuidado, hay más secretos ocultos en el código fuente de Think a Little. Busca el 'ORIGEN'.",
-                img: "../images/premio-medalla.png", // Asegúrate de tener esta imagen o usa una URL
+                msg: "V.A.N.E. reconoce tu firma biométrica. Acceso parcial concedido.",
+                img: "../images/premio-medalla.png", 
                 files: [
                     { name: "Bitácora_Vane.txt", link: "../text/Bitácora_Vane.txt" },
                     { name: "Pista_Caso_11.dat", link: "../text/Pista_Caso_11.dat" },
-                    { name: "Audio_Extraño.mp3", link: "#" }
+                    // Agregamos el archivo visual aquí
+                    { name: "Evidencia_Visual_010.txt", link: "../text/Evidencia_Visual_010.txt" }
                 ]
             },
             "1934": {
@@ -351,6 +352,8 @@
             message.style.color = "#888";
         }
     </script>
-
+    <script data-goatcounter="https://think.goatcounter.com/count"
+            async src="//gc.zgo.at/count.js">
+    </script>
 </body>
 </html>

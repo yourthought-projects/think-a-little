@@ -57,38 +57,52 @@
 
     <script>
         function decodificar() {
-        // 1. Limpiar la entrada (quitar espacios y saltos de línea)
-        const entrada = document.getElementById('inputBinario').value.replace(/\s+/g, '');
-        
-        // 2. Validar que solo haya 0s y 1s
-        if (/[^01]/.test(entrada)) {
-            document.getElementById('resultado').innerText = "ERROR: SE DETECTARON CARACTERES NO BINARIOS.";
-            return;
-        }
+            // 1. Obtener el valor bruto del textarea
+            let rawInput = document.getElementById('inputBinario').value;
 
-        // 3. Convertir la cadena binaria a un array de números (Bytes)
-        // Creamos un array donde guardaremos los números
-        const bytes = [];
+            // 2. LIMPIEZA INTELIGENTE (Mejorada)
+            // En lugar de solo quitar espacios, usamos una expresión regular para
+            // quedarnos ÚNICAMENTE con los 0s y 1s, ignorando texto, guiones, etc.
+            const entrada = rawInput.replace(/[^01]/g, '');
 
-        for (let i = 0; i < entrada.length; i += 8) {
-            // Tomamos grupos de 8 bits
-            const byteBinario = entrada.slice(i, i + 8);
-            // Convertimos ese grupo a número decimal y lo guardamos
-            bytes.push(parseInt(byteBinario, 2));
-        }
+            // 3. Validar si quedó algo después de limpiar
+            if (entrada.length === 0) {
+                document.getElementById('resultado').innerText = "ERROR: NO SE ENCONTRÓ CÓDIGO BINARIO EN LA ENTRADA.";
+                document.getElementById('resultado').style.color = "red";
+                return;
+            }
 
-        // 4. Usar TextDecoder para traducir los bytes a Texto (Soporta UTF-8/Acentos)
-        try {
-            // Convertimos nuestro array normal a un Uint8Array (formato que pide el navegador)
-            const byteArray = new Uint8Array(bytes);
-            // El decodificador une las piezas correctamente (ej: sabe que dos bytes hacen una 'é')
-            const decoder = new TextDecoder('utf-8');
-            const textoFinal = decoder.decode(byteArray);
+            // 4. Advertencia de longitud (Opcional pero útil)
+            // Si la longitud no es múltiplo de 8, faltan bits, pero intentamos decodificar igual lo que se pueda
+            if (entrada.length % 8 !== 0) {
+                console.warn("Advertencia: La cadena binaria no está completa (múltiplo de 8).");
+            }
 
-            document.getElementById('resultado').innerText = "> MENSAJE DESCIFRADO: " + textoFinal;
-        } catch (e) {
-            document.getElementById('resultado').innerText = "ERROR DE DECODIFICACIÓN.";
-        }
+            // 5. Convertir la cadena binaria a Bytes
+            const bytes = [];
+            for (let i = 0; i < entrada.length; i += 8) {
+                const byteBinario = entrada.slice(i, i + 8);
+                // Solo convertimos si tenemos el byte completo (8 bits)
+                if (byteBinario.length === 8) {
+                    bytes.push(parseInt(byteBinario, 2));
+                }
+            }
+
+            // 6. Decodificar a Texto
+            try {
+                const byteArray = new Uint8Array(bytes);
+                const decoder = new TextDecoder('utf-8');
+                const textoFinal = decoder.decode(byteArray);
+
+                // Mostramos el resultado con un color diferente para indicar éxito
+                const resultadoDiv = document.getElementById('resultado');
+                resultadoDiv.innerText = "> MENSAJE EXTRAÍDO: \n" + textoFinal;
+                resultadoDiv.style.color = "#00ff41"; 
+                
+            } catch (e) {
+                document.getElementById('resultado').innerText = "ERROR CRÍTICO AL DECODIFICAR.";
+                document.getElementById('resultado').style.color = "red";
+            }
         }
     </script>
 </body>
